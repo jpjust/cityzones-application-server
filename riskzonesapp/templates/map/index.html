@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block htmlhead %}
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}Map{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <div id="map"></div>
+
+  <form action="{{ url_for('map.run') }}" method="POST">
+    <input type="hidden" id="polygon" name="polygon" value="[]">
+
+    <label for="zl">Zone lenght (zl):</label>
+    <input type="text" id="zl" name="zl" size="5" value="30" required>
+
+    <div>
+      <span>Points of Interest (PoIs):</span>
+      <br>
+      <input type="checkbox" id="poi_hospital" name="poi_hospital" value="1" checked>
+      <label for="poi_hospital"> Hospitals</label>
+      <br>
+      <input type="checkbox" id="poi_firedept" name="poi_firedept" value="1" checked>
+      <label for="poi_firedept"> Fire Stations</label>
+      <br>
+      <input type="checkbox" id="poi_police"   name="poi_police"   value="1" checked>
+      <label for="poi_police"> Police Stations</label>
+    </div>
+
+    <button type="submit">Request map</button>
+    <button onclick="clearmap();">Clear map</button>
+  </form>
+
+  <script>
+    const map = L.map('map').setView([41.178, -8.596], 13);
+    const markers = [];
+    const polpoints = [];
+    
+    let polygon = null;
+    let closed = false;
+  
+    const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    /**
+     *  Clear map function.
+     *
+     *  Clears the map markings (markers and polygon).
+     */
+    function clearmap() {
+      if (polygon) {
+        map.removeLayer(polygon);
+        polygon = null;
+      }
+      
+      while (markers.length > 0) {
+        marker = markers.pop();
+        map.removeLayer(marker);
+      }
+
+      while (polpoints.length > 0) {
+        polpoints.pop();
+      }
+
+      closed = false;
+    }
+
+    /**
+     *  Click event.
+     *  
+     *  Whenever a user clicks on the map, the app should add the corresponding
+     *  coordiniates to create a list of points that will generate a polygon
+     *  for AoI selection.
+    */
+    function onMapClick(e) {
+      // If the polygon is already closed, we don't allow more points
+      if (closed == true) {
+        return;
+      }
+
+      const lat = e.latlng['lat'].toFixed(3);
+      const lon = e.latlng['lng'].toFixed(3);
+
+      // Push the coordinates to our polygon list
+      polpoints.push({
+        'lat': lat,
+        'lon': lon
+      });
+
+      markers.push(L.marker([lat, lon]).addTo(map));
+
+      // If the clicked element equals the first one, close the polygon
+      if (polpoints.length > 1 && polpoints[0]['lat'] === lat && polpoints[0]['lon'] === lon) {
+        html_polygon = document.getElementById('polygon');
+        let str_polygon = '';
+
+        for (let i = 0; i < polpoints.length - 1; i++) {
+          str_polygon = str_polygon + '[' + polpoints[i]['lon'] + ', ' + polpoints[i]['lat'] + '], ';
+        }
+        let i = polpoints.length - 1;
+        str_polygon = str_polygon + '[' + polpoints[i]['lon'] + ', ' + polpoints[i]['lat'] + ']';
+
+        document.getElementById('polygon').value = '[' + str_polygon + ']';
+        polygon = L.polygon([...polpoints]).addTo(map);
+        closed = true;
+      }
+    }
+  
+    map.on('click', onMapClick);
+  </script>
+{% endblock %}

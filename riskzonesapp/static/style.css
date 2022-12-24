@@ -1,0 +1,63 @@
+#map {
+  height: 50Vh;
+  border: 1px black solid;
+}
+
+* {
+  font-family: Helvetica, sans-serif;
+}
+
+body {
+  width: 80%;
+  position: absolute;
+  float: left;
+  left: 10%;
+}
+
+nav {
+  padding: 10px 0px;
+}
+
+nav a {
+  color: green;
+  background: rgb(200, 255, 200);
+  border: 1px green solid;
+  padding: 5px 10px;
+  text-decoration: none;
+  font-size: medium;
+}
+
+.info_msg {
+  color: blue;
+  background: lightblue;
+  border: 1px blue solid;
+  padding: 5px;
+}
+
+.error_msg {
+  color: red;
+  background: rgb(255, 196, 196);
+  border: 1px red solid;
+  padding: 5px;
+}
+
+form {
+  border: 1pt black solid;
+  margin: 5px 0px;
+  padding: 5px;
+}
+
+button {
+  color: green;
+  background: rgb(200, 255, 200);
+  border: 1px green solid;
+  padding: 5px 10px;
+  margin: 5px;
+  font-size: medium;
+}
+
+input {
+  padding: 5px 10px;
+  margin: 5px;
+  font-size: medium;
+}

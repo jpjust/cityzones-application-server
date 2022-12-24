@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>{% block title %}{% endblock %} - RiskZones Web App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block htmlhead %}{% endblock %}
+  </head>
+  <body>
+    <h1>RiskZones Web</h1>
+    <nav>
+      <a href="{{ url_for ('map.show') }}">Map</a>
+      <a href="{{ url_for ('help.index') }}">Help</a>
+      <a href="{{ url_for ('about.index') }}">About</a>
+    </nav>
+    <section class="messages">
+      {% if info_msg %}
+        <div class="info_msg">{{ info_msg }}</div>
+      {% endif %}
+      {% if error_msg %}
+        <div class="error_msg">{{ error_msg }}</div>
+      {% endif %}
+    </section>
+    <section class="content">
+      <header>
+        {% block header %}{% endblock %}
+      </header>
+      {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+      {% endfor %}
+      {% block content %}{% endblock %}
+    </section>
+  </body>
+</html>
