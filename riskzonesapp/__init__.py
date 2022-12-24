@@ -3,6 +3,9 @@ import os
 from flask import Flask
 from . import map, about, help
 
+from dotenv import load_dotenv
+load_dotenv()
+
 def create_app(test_config=None):
   '''
   Create the RiskZones Web Flask App.

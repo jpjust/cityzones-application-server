@@ -10,11 +10,9 @@ import json
 import os
 
 # Create the queue and output directories
-QUEUE_DIR = '/tmp/riskzonesweb/queue'
-OUTPUT_DIR = '/tmp/riskzonesweb/out'
 try:
-  os.makedirs(QUEUE_DIR)
-  os.makedirs(OUTPUT_DIR)
+  os.makedirs(os.getenv('QUEUE_DIR'))
+  os.makedirs(os.getenv('OUTPUT_DIR'))
 except FileExistsError:
   pass
 
@@ -72,18 +70,18 @@ def make_config_file(polygon: list, zl: int) -> tuple:
     "top": top,
     "zone_size": zl,
     "cache_zones": True,
-    "M": 3,
-    "edus": 300,
-    "geojson": f"{QUEUE_DIR}/{base_filename}.geojson",
-    "pois": f"{QUEUE_DIR}/{base_filename}.osm",
+    "M": int(os.getenv('RZ_M')),
+    "edus": int(os.getenv('RZ_EDUS')),
+    "geojson": f"{os.getenv('QUEUE_DIR')}/{base_filename}.geojson",
+    "pois": f"{os.getenv('QUEUE_DIR')}/{base_filename}.osm",
     "pois_types": {
       "amenity": [],
       "railway": []
     },
     "edu_alg": "restricted",
-    "output": f"{OUTPUT_DIR}/{base_filename}_map.csv",
-    "output_edus": f"{OUTPUT_DIR}/{base_filename}_edus.csv",
-    "output_roads": f"{OUTPUT_DIR}/{base_filename}_roads.csv",
+    "output": f"{os.getenv('OUTPUT_DIR')}/{base_filename}_map.csv",
+    "output_edus": f"{os.getenv('OUTPUT_DIR')}/{base_filename}_edus.csv",
+    "output_roads": f"{os.getenv('OUTPUT_DIR')}/{base_filename}_roads.csv",
   }
 
   return base_filename, base_conf
@@ -92,7 +90,7 @@ def write_conf(filename: str, conf: dict, geojson: dict) -> bool:
   '''
   Write the GeoJSON and configuration JSON into the queue directory.
   '''
-  fp = open(f"{QUEUE_DIR}/{filename}", 'w')
+  fp = open(f"{os.getenv('QUEUE_DIR')}/{filename}", 'w')
   json.dump(conf, fp)
   fp.close()
 
