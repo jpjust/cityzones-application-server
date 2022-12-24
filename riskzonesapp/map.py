@@ -42,3 +42,5 @@ def run():
     return render_template('map/index.html', error_msg='Error: all fields are mandatory.')
   except IndexError:
     return render_template('map/index.html', error_msg='There was an error trying to parse the AoI polygon. Check if you created a valid AoI before submitting a map request.')
+  except ValueError:
+    return render_template('map/index.html', error_msg='There was an error trying to parse some parameters. Check if you entered proper values.')
