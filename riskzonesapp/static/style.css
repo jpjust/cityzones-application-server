@@ -8,14 +8,13 @@
 }
 
 body {
-  width: 80%;
-  position: absolute;
-  float: left;
-  left: 10%;
+  max-width: 800px;
+  margin: auto;
 }
 
 nav {
   padding: 10px 0px;
+  overflow: auto;
 }
 
 nav a {
@@ -41,7 +40,7 @@ nav a {
   padding: 5px;
 }
 
-form {
+.mapform {
   border: 1pt black solid;
   margin: 5px 0px;
   padding: 5px;
