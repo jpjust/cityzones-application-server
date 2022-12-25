@@ -1,15 +1,16 @@
 import sys, os
 
-# Get current and venv directories
+# Get venv python3 path
 cwd = os.getcwd()
-INTERP = os.path.expanduser(f"{cwd}/venv/bin/python3")
+INTERP = os.path.expanduser("%s/venv/bin/python3" % cwd)
 
 # Replace python3 process
 if sys.executable != INTERP:
   os.execl(INTERP, INTERP, *sys.argv)
 
 # Include venv bin into PATH
-sys.path.insert(0, f"{cwd}/venv/bin")
+sys.path.insert(0, "%s/venv/bin" % cwd)
 
 # Import the application
-import riskzonesapp as application
+import riskzonesapp
+application = riskzonesapp.create_app()
