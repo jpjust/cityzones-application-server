@@ -4,7 +4,7 @@ load_dotenv()
 import os
 
 from flask import Flask
-from . import models, map, about, help
+from . import models, api, map, about, help
 
 def create_app(test_config=None):
     '''
@@ -21,6 +21,7 @@ def create_app(test_config=None):
         models.db.create_all()
 
     # Blueprints
+    app.register_blueprint(api.bp)
     app.register_blueprint(map.bp)
     app.register_blueprint(about.bp)
     app.register_blueprint(help.bp)
