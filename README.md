@@ -20,6 +20,6 @@ Install the dependencies.
 
 Copy `.env.example` file and set the configuration for your server.
 
-`cp .venv.example .venv`
+`cp .env.example .env`
 
 To run RiskZones Web you will need Passenger WSGI enabled in your server. Follow your HTTP daemon instructions to setup Passenger and finish the deployment.
