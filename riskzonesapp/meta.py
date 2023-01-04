@@ -64,16 +64,16 @@ def make_config_file(polygon: list, zl: int) -> tuple:
         "cache_zones": True,
         "M": int(os.getenv('RZ_M')),
         "edus": int(os.getenv('RZ_EDUS')),
-        "geojson": f"{os.getenv('QUEUE_DIR')}/{base_filename}.geojson",
-        "pois": f"{os.getenv('QUEUE_DIR')}/{base_filename}.osm",
+        "geojson": f"{base_filename}.geojson",
+        "pois": f"{base_filename}.osm",
         "pois_types": {
             "amenity": [],
             "railway": []
         },
         "edu_alg": "restricted",
-        "output": f"{os.getenv('OUTPUT_DIR')}/{base_filename}_map.csv",
-        "output_edus": f"{os.getenv('OUTPUT_DIR')}/{base_filename}_edus.csv",
-        "output_roads": f"{os.getenv('OUTPUT_DIR')}/{base_filename}_roads.csv",
+        "output": f"{base_filename}_map.csv",
+        "output_edus": f"{base_filename}_edus.csv",
+        "output_roads": f"{base_filename}_roads.csv",
     }
 
     return base_filename, base_conf
