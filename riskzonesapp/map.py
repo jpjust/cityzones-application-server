@@ -1,5 +1,4 @@
 from flask import Blueprint, current_app, render_template, request
-from flask_sqlalchemy import SQLAlchemy
 from . import meta, models
 
 bp = Blueprint('map', __name__, url_prefix='/map')
