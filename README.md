@@ -16,7 +16,7 @@ Then activate the virtual environment.
 
 Install the dependencies.
 
-`python3 -m pip install Flask python-dotenv`
+`python3 -m pip install flask flask-sqlalchemy flask-mysqldb python-dotenv`
 
 Copy `.env.example` file and set the configuration for your server.
 

@@ -85,16 +85,3 @@ def make_config_file(polygon: list, zl: int) -> tuple:
   }
 
   return base_filename, base_conf
-
-def write_conf(filename: str, conf: dict, geojson: dict) -> bool:
-  '''
-  Write the GeoJSON and configuration JSON into the queue directory.
-  '''
-  fp = open(f"{os.getenv('QUEUE_DIR')}/{filename}", 'w')
-  json.dump(conf, fp)
-  fp.close()
-
-  fp = open(conf['geojson'], 'w')
-  json.dump(geojson, fp)
-  fp.close()
-  return True

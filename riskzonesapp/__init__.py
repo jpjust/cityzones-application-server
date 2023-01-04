@@ -4,39 +4,38 @@ load_dotenv()
 import os
 
 from flask import Flask
-from . import map, about, help
+from . import models, map, about, help
 
 def create_app(test_config=None):
-  '''
-  Create the RiskZones Web Flask App.
-  '''
-  app = Flask(__name__, instance_relative_config=True)
-  app.config.from_mapping(
-    SECRET_KEY='dev',
-    DATABASE=os.path.join(app.instance_path, 'riskzonesapp.sqlite'),
-  )
+    '''
+    Create the RiskZones Web Flask App.
+    '''
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE_URI'),
+    )
+    models.db.init_app(app)
 
-  # Blueprints
-  app.register_blueprint(map.bp)
-  app.register_blueprint(about.bp)
-  app.register_blueprint(help.bp)
+    with app.app_context():
+        models.db.create_all()
 
-  if test_config is None:
-    # load the instance config, if it exists, when not testing
+    # Blueprints
+    app.register_blueprint(map.bp)
+    app.register_blueprint(about.bp)
+    app.register_blueprint(help.bp)
+
     app.config.from_pyfile('config.py', silent=True)
-  else:
-    # load the test config if passed in
-    app.config.from_mapping(test_config)
 
-  # ensure the instance folder exists
-  try:
-    os.makedirs(app.instance_path)
-  except OSError:
-    pass
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
 
-  # a simple page that says hello
-  @app.route('/')
-  def index():
-    return map.show()
+    # a simple page that says hello
+    @app.route('/')
+    def index():
+        return map.show()
 
-  return app
+    return app
