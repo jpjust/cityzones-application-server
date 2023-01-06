@@ -26,7 +26,7 @@ def make_polygon(polygon: list) -> dict:
                 "type": "Feature",
                 "geometry": {
                     "type": "MultiPolygon",
-                    "coordinates": [[]]
+                    "coordinates": [[[]]]
                 }
             }
         ]
@@ -34,7 +34,7 @@ def make_polygon(polygon: list) -> dict:
 
     # Add each point to the GeoJSON structure
     for point in polygon[:-1]:
-        pol_dict['features'][0]['geometry']['coordinates'][0].append(point)
+        pol_dict['features'][0]['geometry']['coordinates'][0][0].append(point)
 
     return pol_dict
 
@@ -53,9 +53,10 @@ def make_config_file(polygon: list, zl: int) -> tuple:
         if point[0] < left:   left   = point[0]
         if point[0] > right:  right  = point[0]
         if point[1] < bottom: bottom = point[1]
-        if point[1] < top:    top    = point[1]
+        if point[1] > top:    top    = point[1]
     
     base_conf = {
+        "base_filename": base_filename,
         "left": left,
         "bottom": bottom,
         "right": right,
