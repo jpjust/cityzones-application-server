@@ -17,8 +17,15 @@ def create_app(test_config=None):
     )
     models.db.init_app(app)
 
+    # Create database tables
     with app.app_context():
         models.db.create_all()
+
+    # Create results directories
+    try:
+        os.makedirs(os.getenv('RESULTS_DIR'))
+    except FileExistsError:
+        pass
 
     # Blueprints
     app.register_blueprint(api.bp)
