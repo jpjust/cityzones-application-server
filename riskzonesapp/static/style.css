@@ -92,3 +92,19 @@ input {
   padding: 5px;
   border-top: 1pt black solid;
 }
+
+.status_queue {
+  color: black;
+}
+
+.status_processing {
+  color: blue;
+}
+
+.status_expired {
+  color: orange;
+}
+
+.status_done {
+  color: green;
+}

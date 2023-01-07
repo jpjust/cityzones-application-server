@@ -5,5 +5,61 @@
 {% endblock %}
 
 {% block content %}
-  <p>Help.</p>
+  <h2>Requesting an AoI classification</h2>
+
+  <p>
+    This web application is intended to provide a easy to use interface for riskzones tool. The first step is to
+    create a polygon of the AoI (Area of Interest) on <a href="{{ url_for('map.show') }}">the map</a>. Just click
+    the points that make a polygon surrounding your AoI. When you click the first point, the polygon is closed.
+    To start over, click &quot;Clear map&quot;.
+  </p>
+
+  <p>
+    After selecting an AoI, enter the configuration of the classification in the form below the map. Zone length
+    is the size of each zone side in meters. Lower values gives a better resolution, but also takes longer for the
+    classification to complete. The checkboxes are used to select what PoIs (Points of Interest) you want to use
+    for the classification. Make sure to select at least one PoI, or the classification will be null.
+  </p>
+
+  <p>
+    Finally, click &quot;Request map&quot;. The web interface will save your request in our database so a worker
+    computer can get it and perform the classification. The page will reload and show a message on top indicating
+    that you request has been successfully submited and its number. Keep it!
+  </p>
+
+  <h2>Vieweing the result</h2>
+
+  <p>
+    On the <a href="{{ url_for('map.results') }}">results page</a> you can see a list of all tasks that were requested.
+    Your request will be on this list, just look for its number.
+  </p>
+
+  <p>
+    The list shows also the timestamp of the task (i.e, when it was created). After the request, the task will be
+    in the &quot;<span class="status_queue">On queue</span>&quot; stage. This mean that your task is in our database
+    waiting for a worker to get it.
+  </p>
+
+  <p>
+    When a worker requests a task, the web application will send the first task <span class="status_queue">on queue</span>.
+    The task then gets into the &quot;<span class="status_processing">Processing</span>&quot; stage.
+  </p>
+
+  <p>
+    After finishing performing a task, the worker sends its result to the web application and the tasks enters the
+    &quot;<span class="status_done">Done</span>&quot; stage. The &quot;Show map&quot; button will be displayed.
+    at the right of the list. Click it to see the results of the classification on the map. Also there will be a
+    CSV file icon that can be used to download a ZIP file with the CSV data of the classification that can be used
+    in Google Earth Engine. Use the <a href="https://github.com/jpjust/riskzones/blob/main/gee_riskzones.js" target="_blank">
+    example script</a> in the project's GitHub repository.
+  </p>
+
+  <p>
+    Sometimes something wrong may happen on the worker computer and the task does not get finished. One hour after a
+    worker gets a task, it the results are not received by the web application, the tasks enters the
+    &quot;<span class="status_expired">Process expired</span>&quot; state. This does not mean your task will not be done.
+    It gets back on queue, so another worker can get it and finish. This can also happen if your AoI is too big and
+    the worker takes more than an hour to complete it. Even if your task gets into the expired state, if the worker
+    returns the result it will be received by the web application and displayed on the page.
+  </p>
 {% endblock %}

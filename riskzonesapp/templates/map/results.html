@@ -27,13 +27,13 @@
         <div class="result_data">{% if task.requested_at %}{{ task.requested_at }}{% endif %}</div>
         <div class="result_data">
           {% if task.result %}
-            <span style="color: green;">Done</span>
+            <span class="status_done">Done</span>
           {% elif task.expired() %}
-            <span style="color: orange;">Processing expired, back on queue</span>
+            <span class="status_expired">Processing expired, back on queue</span>
           {% elif task.requested_at %}
-            <span style="color: blue;">Processing...</span>
+            <span class="status_processing">Processing...</span>
           {% else %}
-            <span style="color: black;">On queue</span>
+            <span class="status_queue">On queue</span>
           {% endif %}
         </div>
         <div class="result_data">
