@@ -2,6 +2,7 @@ from flask import Blueprint, current_app, render_template, request
 from . import meta, models
 
 bp = Blueprint('map', __name__, url_prefix='/map')
+db = models.db
 
 @bp.route('/show', methods=['GET'])
 def show():
@@ -50,3 +51,13 @@ def run():
         return render_template('map/index.html', error_msg='There was an error trying to parse the AoI polygon. Check if you created a valid AoI before submitting a map request.')
     except ValueError:
         return render_template('map/index.html', error_msg='There was an error trying to parse some parameters. Check if you entered proper values.')
+
+@bp.route('/results', methods=['GET'])
+def results():
+    '''
+    Results index page.
+
+    Shows the results of previous requests to display on map.
+    '''
+    tasks = db.session.query(models.Task).all()
+    return render_template('map/results.html', tasks=tasks)

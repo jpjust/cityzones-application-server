@@ -60,3 +60,31 @@ input {
   margin: 5px;
   font-size: medium;
 }
+
+.results_list {
+  display: table;
+  width: calc(100% - 10px - 2px);
+  border: 1pt black solid;
+  margin: 5px 0px;
+  padding: 5px;
+}
+
+.results_header {
+  display: table-row;
+  background-color: lightgray;
+}
+
+.results_header_label {
+  display: table-cell;
+  padding: 5px;
+}
+
+.result_item {
+  display: table-row;
+}
+
+.result_data {
+  display: table-cell;
+  padding: 5px;
+  border-top: 1pt black solid;
+}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block htmlhead %}
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}Results{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <div id="map"></div>
+
+  <div class="results_list">
+    <div class="results_header">
+      <div class="results_header_label">#</div>
+      <div class="results_header_label">Created at</div>
+      <div class="results_header_label">Started at</div>
+      <div class="results_header_label">Status</div>
+      <div class="results_header_label"></div>
+    </div>
+    {% for task in tasks %}
+      <div class="result_item">
+        <div class="result_data">{{ task.id }}</div>
+        <div class="result_data">{{ task.created_at }}</div>
+        <div class="result_data">{% if task.requested_at %}{{ task.requested_at }}{% endif %}</div>
+        <div class="result_data">
+          {% if task.result %}
+            <span style="color: green;">Done</span>
+          {% elif task.expired() %}
+            <span style="color: orange;">Processing expired, back on queue</span>
+          {% elif task.requested_at %}
+            <span style="color: blue;">Processing...</span>
+          {% else %}
+            <span style="color: black;">On queue</span>
+          {% endif %}
+        </div>
+        <div class="result_data">Load result</div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <script>
+    const map = L.map('map').setView([0, 0], 2);
+    const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+  </script>
+{% endblock %}
