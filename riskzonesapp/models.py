@@ -17,14 +17,18 @@ class Task(db.Model):
     base_filename = db.Column(db.String(length=64), nullable=False)
     config = db.Column(db.JSON, nullable=False)
     geojson = db.Column(db.JSON, nullable=False)
+    lat = db.Column(db.Float, nullable=False)
+    lon = db.Column(db.Float, nullable=False)
     requested_at = db.Column(db.DateTime(timezone=True), nullable=True)
 
     result = relationship("Result", back_populates="task")
 
-    def __init__(self, base_filename, config, geojson):
+    def __init__(self, base_filename, config, geojson, lat, lon):
         self.base_filename = base_filename
         self.config = config
         self.geojson = geojson
+        self.lat = lat
+        self.lon = lon
         self.created_at = datetime.now()
     
     def expired(self):

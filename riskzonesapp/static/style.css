@@ -83,6 +83,10 @@ input {
   display: table-row;
 }
 
+.result_item:hover {
+  background-color: lightblue;
+}
+
 .result_data {
   display: table-cell;
   padding: 5px;

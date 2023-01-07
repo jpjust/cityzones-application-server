@@ -32,6 +32,8 @@ def run():
         # Generate configuration files
         geojson = meta.make_polygon(polygon)
         base_filename, conf = meta.make_config_file(polygon, zl)
+        center_lon = (conf['left'] + conf['right']) /2
+        center_lat = (conf['bottom'] + conf['top']) /2
 
         if poi_hospital: conf['pois_types']['amenity'].append('hospital')
         if poi_firedept: conf['pois_types']['amenity'].append('fire_station')
@@ -39,7 +41,7 @@ def run():
 
         # Store in database        
         with current_app.app_context():
-            task = models.Task(base_filename, conf, geojson)
+            task = models.Task(base_filename, conf, geojson, center_lat, center_lon)
             models.db.session.add(task)
             models.db.session.commit()
 
