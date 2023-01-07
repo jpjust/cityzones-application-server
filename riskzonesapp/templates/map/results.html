@@ -36,7 +36,7 @@
             <span style="color: black;">On queue</span>
           {% endif %}
         </div>
-        <div class="result_data">Load result</div>
+        <div class="result_data"><button onclick="get_data({{ task.id }});">Load data</button></div>
       </div>
     {% endfor %}
   </div>
@@ -47,5 +47,37 @@
       maxZoom: 19,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
+    const circles = [];
+
+    function get_data(id) {
+      fetch('/api/result/' + id)
+        .then((res) => {
+          if (res.status == 200) {
+            return res.json();
+          }
+        })
+        .then((json) => {
+          while (circles.length > 0) {
+            circle = circles.pop();
+            map.removeLayer(circle);
+          }
+          json['1'].forEach((value, index, array) => {
+            let circle = L.circle([value[1], value[0]], {radius: 5, color: '#00ff00', stroke: false, fillOpacity: 0.5}).addTo(map);
+            circles.push(circle);
+          });
+          json['2'].forEach((value, index, array) => {
+            let circle = L.circle([value[1], value[0]], {radius: 5, color: '#ffff00', stroke: false, fillOpacity: 0.5}).addTo(map);
+            circles.push(circle);
+          });
+          json['3'].forEach((value, index, array) => {
+            let circle = L.circle([value[1], value[0]], {radius: 5, color: '#ff0000', stroke: false, fillOpacity: 0.5}).addTo(map);
+            circles.push(circle);
+          });
+          map.setView([json['center_lat'], json['center_lon']], 10);
+        })
+        .catch((err) => {
+          console.log('Error: ' + err);
+        });
+    }
   </script>
 {% endblock %}

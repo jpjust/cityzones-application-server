@@ -49,12 +49,19 @@ def get_result(id):
     if result == None:
         return Response(json.dumps({'msg': 'There is no result for this task yet.'}), headers={'Content-type': 'application/json'}, status=404)
 
-    map_file = f'{os.getenv("RESULTS_DIR")}/a{result.task.base_filename}_map.csv'
+    map_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_map.csv'
     classification = {
+        'center_lat': 0,
+        'center_lon': 0,
         '1': [],
         '2': [],
         '3': []
     }
+
+    left = 180
+    right = -180
+    bottom = 90
+    top = -90
 
     try:
         fp = open(map_file, 'r')
@@ -64,9 +71,17 @@ def get_result(id):
         for row in reader:
             M = row[1]
             geodata = json.loads(row[2])
-            classification[M].append(geodata['coordinates'])
+            coord = geodata['coordinates']
+            classification[M].append(coord)
+            if coord[0] < left:   left   = coord[0]
+            if coord[0] > right:  right  = coord[0]
+            if coord[1] < bottom: bottom = coord[1]
+            if coord[1] > top:    top    = coord[1]
 
         fp.close()
+
+        classification['center_lat'] = (bottom + top) / 2
+        classification['center_lon'] = (left + right) / 2
 
         return classification
     except FileNotFoundError:
