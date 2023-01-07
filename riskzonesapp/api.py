@@ -21,7 +21,7 @@ def get_task():
         tasks = db.session.query(models.Task).where(or_(models.Task.requested_at < request_exp, models.Task.requested_at == None)).all()
 
         for task in tasks:
-            if task.result == None:
+            if len(task.result) == 0:
                 task.requested_at = datetime.now()
                 db.session.commit()
 
@@ -93,7 +93,7 @@ def post_result(id):
             task = db.get_or_404(models.Task, id)
 
             # Check if there is a result for this task
-            if task.result != None:
+            if len(task.result) > 0:
                 return Response(json.dumps({'msg': 'There is a result for this task already.'}), headers={'Content-type': 'application/json'}, status=409)
             
             # Write results
