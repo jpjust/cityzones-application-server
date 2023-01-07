@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from . import models
 import os
 import json
+import csv
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 db = models.db
@@ -38,10 +39,43 @@ def get_task():
 
     return Response({'msg': 'No tasks to perform.'}, status=204)
 
+@bp.route('/result/<int:id>', methods=['GET'])
+def get_result(id):
+    '''
+    Get a result by its ID and respond with its map data.
+    '''
+    result = find_result_for_task(id)
+
+    if result == None:
+        return Response(json.dumps({'msg': 'There is no result for this task yet.'}), headers={'Content-type': 'application/json'}, status=404)
+
+    map_file = f'{os.getenv("RESULTS_DIR")}/a{result.task.base_filename}_map.csv'
+    classification = {
+        '1': [],
+        '2': [],
+        '3': []
+    }
+
+    try:
+        fp = open(map_file, 'r')
+        reader = csv.reader(fp)
+        fp.readline()  # Skip header line
+
+        for row in reader:
+            M = row[1]
+            geodata = json.loads(row[2])
+            classification[M].append(geodata['coordinates'])
+
+        fp.close()
+
+        return classification
+    except FileNotFoundError:
+        return Response(json.dumps({'msg': 'Results file not found for this task.'}), headers={'Content-type': 'application/json'}, status=500)
+
 @bp.route('/result', methods=['POST'])
 def post_result():
     '''
-    Get a result from the worker and save its data.
+    Receive a result from the worker and save its data.
     '''
     try:
         with current_app.app_context():
