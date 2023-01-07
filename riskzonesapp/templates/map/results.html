@@ -36,7 +36,12 @@
             <span style="color: black;">On queue</span>
           {% endif %}
         </div>
-        <div class="result_data"><button onclick="get_data({{ task.id }});">Load data</button></div>
+        <div class="result_data">
+          {% if task.result %}
+            <button onclick="get_data({{ task.id }});">Load data</button>
+            <span style="fa-icon"><a href="{{ url_for('api.download_result', id=task.id) }}"><i class="fa-solid fa-file-csv fa-xl"></i></a></span>
+          {% endif %}
+        </div>
       </div>
     {% endfor %}
   </div>

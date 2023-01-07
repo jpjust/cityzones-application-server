@@ -1,8 +1,10 @@
-from flask import Blueprint, Response, current_app, request
+from flask import Blueprint, Response, current_app, request, send_file
 from sqlalchemy import and_, or_
 from datetime import datetime, timedelta
+from zipfile import ZipFile
 from . import models
 import os
+import io
 import json
 import csv
 
@@ -119,3 +121,29 @@ def post_result():
         return Response(json.dumps({'msg': 'Received data is incomplete.'}), headers={'Content-type': 'application/json'}, status=400)
 
     return Response(json.dumps({'msg': 'Data received succesfully.'}), headers={'Content-type': 'application/json'}, status=201)
+
+@bp.route('/result/download/<int:id>', methods=['GET'])
+def download_result(id):
+    '''
+    Get a result by its ID and respond with its CSV files in ZIP format.
+    '''
+    result = find_result_for_task(id)
+
+    if result == None:
+        return Response(json.dumps({'msg': 'There is no result for this task yet.'}), headers={'Content-type': 'application/json'}, status=404)
+
+    map_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_map.csv'
+    edus_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_edus.csv'
+    zip_data = io.BytesIO()
+
+    with ZipFile(zip_data, 'w') as myzip:
+        myzip.write(map_file, arcname=f'{result.task.base_filename}_map.csv')
+        myzip.write(edus_file, arcname=f'{result.task.base_filename}_edus.csv')
+    
+    zip_data.seek(0)
+    return send_file(
+        zip_data,
+        as_attachment=True,
+        download_name=f'{result.task.base_filename}.zip',
+        mimetype='application/zip'
+    )
