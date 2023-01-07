@@ -97,7 +97,7 @@ def post_result(id):
                 return Response(json.dumps({'msg': 'There is a result for this task already.'}), headers={'Content-type': 'application/json'}, status=409)
             
             # Write results
-            with open(f'{os.getenv("RESULTS_DIR")}/{task.base_filename}_map.csv', 'w') as f:
+            with open(f'{os.getenv("RESULTS_DIR")}/{task.base_filename}_map.csv', 'wb') as f:
                 chunk_size = 4096
                 while True:
                     chunk = request.stream.read(chunk_size)
@@ -107,7 +107,7 @@ def post_result(id):
                         models.db.session.commit()
                         return Response(json.dumps({'msg': 'Data received succesfully.'}), headers={'Content-type': 'application/json'}, status=201)
 
-                    f.write(chunk.decode())
+                    f.write(chunk)
     except KeyError:
         return Response(json.dumps({'msg': 'Received data is incomplete.'}), headers={'Content-type': 'application/json'}, status=400)
 
