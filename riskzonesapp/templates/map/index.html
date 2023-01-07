@@ -15,6 +15,8 @@
   <div class="mapform">
     <form action="{{ url_for('map.run') }}" method="POST">
       <input type="hidden" id="polygon" name="polygon" value="[]">
+      <input type="hidden" id="center_lat" value="{{ lat }}">
+      <input type="hidden" id="center_lon" value="{{ lon }}">
 
       <label for="zl">Zone lenght (zl):</label>
       <input type="text" id="zl" name="zl" size="5" value="30" required>
@@ -38,7 +40,9 @@
   </div>
 
   <script>
-    const map = L.map('map').setView([41.178, -8.596], 13);
+    const center_lat = parseFloat(document.getElementById('center_lat').value);
+    const center_lon = parseFloat(document.getElementById('center_lon').value);
+    const map = L.map('map').setView([center_lon, center_lat], 13);
     const markers = [];
     const polpoints = [];
     
@@ -86,8 +90,8 @@
         return;
       }
 
-      const lat = e.latlng['lat'].toFixed(3);
-      const lon = e.latlng['lng'].toFixed(3);
+      const lat = e.latlng['lat']
+      const lon = e.latlng['lng']
 
       // Push the coordinates to our polygon list
       polpoints.push({
@@ -95,22 +99,26 @@
         'lon': lon
       });
 
-      markers.push(L.marker([lat, lon]).addTo(map));
+      // Creates a marker
+      let marker = L.marker([lat, lon]).addTo(map);
+      markers.push(marker);
 
-      // If the clicked element equals the first one, close the polygon
-      if (polpoints.length > 1 && polpoints[0]['lat'] === lat && polpoints[0]['lon'] === lon) {
-        html_polygon = document.getElementById('polygon');
-        let str_polygon = '';
-
-        for (let i = 0; i < polpoints.length - 1; i++) {
-          str_polygon = str_polygon + '[' + polpoints[i]['lon'] + ', ' + polpoints[i]['lat'] + '], ';
-        }
-        let i = polpoints.length - 1;
-        str_polygon = str_polygon + '[' + polpoints[i]['lon'] + ', ' + polpoints[i]['lat'] + ']';
-
-        document.getElementById('polygon').value = '[' + str_polygon + ']';
-        polygon = L.polygon([...polpoints]).addTo(map);
-        closed = true;
+      // Ther first marker gets a click event to close the polygon
+      if (markers.length == 1) {
+        marker.on('click', (e) => {
+          html_polygon = document.getElementById('polygon');
+          let str_polygon = '';
+  
+          for (let i = 0; i < polpoints.length - 1; i++) {
+            str_polygon = str_polygon + '[' + polpoints[i]['lon'] + ', ' + polpoints[i]['lat'] + '], ';
+          }
+          let i = polpoints.length - 1;
+          str_polygon = str_polygon + '[' + polpoints[i]['lon'] + ', ' + polpoints[i]['lat'] + ']';
+  
+          document.getElementById('polygon').value = '[' + str_polygon + ']';
+          polygon = L.polygon([...polpoints]).addTo(map);
+          closed = true;
+        });
       }
     }
   
