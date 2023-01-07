@@ -7,8 +7,10 @@ bp = Blueprint('map', __name__, url_prefix='/map')
 def show():
     '''
     Map index page.
+
+    Shows the map centered on FEUP.
     '''
-    return render_template('map/index.html')
+    return render_template('map/index.html', lat='-8.596', lon='41.178')
 
 @bp.route('/run', methods=['POST'])
 def run():
@@ -40,7 +42,7 @@ def run():
             models.db.session.add(task)
             models.db.session.commit()
 
-        return render_template('map/index.html', info_msg='Your request was successfully queued.')
+        return render_template('map/index.html', info_msg='Your request was successfully queued.', lat=polygon[0][0], lon=polygon[0][1])
 
     except KeyError:
         return render_template('map/index.html', error_msg='Error: all fields are mandatory.')
