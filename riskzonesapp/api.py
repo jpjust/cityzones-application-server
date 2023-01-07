@@ -37,7 +37,7 @@ def get_task():
                 }
                 return data
 
-    return Response({'msg': 'No tasks to perform.'}, status=204)
+    return Response(json.dumps({'msg': 'No tasks to perform.'}), headers={'Content-type': 'application/json'}, status=204)
 
 @bp.route('/result/<int:id>', methods=['GET'])
 def get_result(id):
@@ -85,7 +85,7 @@ def post_result():
             # Check if there is a result for this task
             result = find_result_for_task(task.id)
             if result != None:
-                return Response({'msg': 'There is a result for this task already.'}, status=409)
+                return Response(json.dumps({'msg': 'There is a result for this task already.'}), headers={'Content-type': 'application/json'}, status=409)
             
             # Write results
             fp_map = open(f'{os.getenv("RESULTS_DIR")}/{task.base_filename}_map.csv', 'w')
@@ -101,6 +101,6 @@ def post_result():
             models.db.session.commit()
             print(result.id * 10)
     except KeyError:
-        return Response({'msg': 'Received data is incomplete.'}, status=400)
+        return Response(json.dumps({'msg': 'Received data is incomplete.'}), headers={'Content-type': 'application/json'}, status=400)
 
-    return Response({'msg': 'Data received succesfully.'}, status=201)
+    return Response(json.dumps({'msg': 'Data received succesfully.'}), headers={'Content-type': 'application/json'}, status=201)
