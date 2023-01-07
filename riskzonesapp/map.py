@@ -45,7 +45,7 @@ def run():
             models.db.session.add(task)
             models.db.session.commit()
 
-        return render_template('map/index.html', info_msg='Your request was successfully queued.', lat=polygon[0][0], lon=polygon[0][1])
+            return render_template('map/index.html', info_msg=f'Your request was successfully queued. Request number: {task.id}.', lat=polygon[0][0], lon=polygon[0][1])
 
     except KeyError:
         return render_template('map/index.html', error_msg='Error: all fields are mandatory.')
