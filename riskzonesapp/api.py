@@ -15,7 +15,8 @@ def find_result_for_task(task_id: int):
     '''
     Search for a result of a task.
     '''
-    return db.session.query(models.Result).where(models.Result.task_id == task_id).first()    
+    with current_app.app_context():
+        return db.session.query(models.Result).where(models.Result.task_id == task_id).first()    
 
 @bp.route('/task', methods=['GET'])
 def get_task():

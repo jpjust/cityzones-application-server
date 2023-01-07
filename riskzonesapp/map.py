@@ -61,5 +61,6 @@ def results():
 
     Shows the results of previous requests to display on map.
     '''
-    tasks = db.session.query(models.Task).all()
-    return render_template('map/results.html', tasks=tasks)
+    with current_app.app_context():
+        tasks = db.session.query(models.Task).all()
+        return render_template('map/results.html', tasks=tasks)
