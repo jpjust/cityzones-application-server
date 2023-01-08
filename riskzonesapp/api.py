@@ -96,18 +96,45 @@ def post_result(id):
             if len(task.result) > 0:
                 return Response(json.dumps({'msg': 'There is a result for this task already.'}), headers={'Content-type': 'application/json'}, status=409)
             
-            # Write results
-            with open(f'{os.getenv("RESULTS_DIR")}/{task.base_filename}_map.csv', 'wb') as f:
-                chunk_size = 4096
-                while True:
-                    chunk = request.stream.read(chunk_size)
-                    if len(chunk) == 0:
-                        result = models.Result(task.id)
-                        models.db.session.add(result)
-                        models.db.session.commit()
-                        return Response(json.dumps({'msg': 'Data received succesfully.'}), headers={'Content-type': 'application/json'}, status=201)
+            # Read stream
+            fp = None
+            boundary = request.stream.readline().strip()
 
-                    f.write(chunk)
+            while True:
+                line = request.stream.readline()
+
+                # If there is no data, stream is over
+                if len(line) == 0:
+                    if fp != None: fp.close()
+                    result = models.Result(task.id)
+                    models.db.session.add(result)
+                    models.db.session.commit()
+                    return Response(json.dumps({'msg': 'Data received succesfully.'}), headers={'Content-type': 'application/json'}, status=201)
+
+                # If line is blank, the file contents is about to begin
+                if line == b'\r\n':
+                    while True:
+                        line = request.stream.readline()
+
+                        # Check if the contents of the file has ended
+                        if line.startswith(boundary):
+                            fp.seek(-1, io.SEEK_CUR)
+                            fp.truncate()
+                            fp.close()
+                            break
+                        
+                        fp.write(line.strip())
+                        fp.write(b'\n')
+
+                # Other case is a line of headers
+                else:
+                    if b'name="map"' in line:
+                        if fp != None: fp.close()
+                        fp = open(f'{os.getenv("RESULTS_DIR")}/{task.base_filename}_map.csv', 'wb')
+                    elif b'name="edus"' in line:
+                        if fp != None: fp.close()
+                        fp = open(f'{os.getenv("RESULTS_DIR")}/{task.base_filename}_edus.csv', 'wb')
+
     except KeyError:
         return Response(json.dumps({'msg': 'Received data is incomplete.'}), headers={'Content-type': 'application/json'}, status=400)
 
