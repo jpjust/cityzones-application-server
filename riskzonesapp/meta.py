@@ -71,7 +71,7 @@ def make_config_file(polygon: list, zl: int) -> tuple:
             "amenity": [],
             "railway": []
         },
-        "edu_alg": "restricted",
+        "edu_alg": "none",
         "output": f"{base_filename}_map.csv",
         "output_edus": f"{base_filename}_edus.csv",
         "output_roads": f"{base_filename}_roads.csv",
