@@ -33,8 +33,11 @@ def make_polygon(polygon: list) -> dict:
     }
 
     # Add each point to the GeoJSON structure
-    for point in polygon[:-1]:
+    for point in polygon:
         pol_dict['features'][0]['geometry']['coordinates'][0][0].append(point)
+    
+    # The first point must be repeated at the end to close the polygon
+    pol_dict['features'][0]['geometry']['coordinates'][0][0].append(polygon[0])
 
     return pol_dict
 
