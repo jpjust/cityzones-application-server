@@ -1,7 +1,7 @@
 from flask import Blueprint, Response, current_app, request, send_file, stream_with_context
 from sqlalchemy import and_, or_
 from datetime import datetime, timedelta
-from zipfile import ZipFile
+from zipfile import ZipFile, ZIP_DEFLATED
 from . import models
 import os
 import io
@@ -153,7 +153,7 @@ def download_result(id):
         #edus_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_edus.csv'
         zip_data = io.BytesIO()
 
-        with ZipFile(zip_data, 'w') as myzip:
+        with ZipFile(zip_data, 'w', compression=ZIP_DEFLATED, compresslevel=9) as myzip:
             myzip.write(map_file, arcname=f'{result.task.base_filename}_map.csv')
             #myzip.write(edus_file, arcname=f'{result.task.base_filename}_edus.csv')
         
