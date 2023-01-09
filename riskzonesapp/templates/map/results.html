@@ -6,44 +6,46 @@
 {% endblock %}
 
 {% block header %}
-  <h1>{% block title %}Results{% endblock %}</h1>
+  {% block title %}Results{% endblock %}
 {% endblock %}
 
 {% block content %}
-  <div id="map"></div>
+  <div class="map_ui">
+    <div id="map"></div>
 
-  <div class="results_list">
-    <div class="results_header">
-      <div class="results_header_label">#</div>
-      <div class="results_header_label">Created at</div>
-      <div class="results_header_label">Started at</div>
-      <div class="results_header_label">Status</div>
-      <div class="results_header_label"></div>
-    </div>
-    {% for task in tasks %}
-      <div class="result_item" onmouseover="show_marker({{ task.lat }}, {{ task.lon }});" onmouseout="clear_marker();">
-        <div class="result_data">{{ task.id }}</div>
-        <div class="result_data">{{ task.created_at }}</div>
-        <div class="result_data">{% if task.requested_at %}{{ task.requested_at }}{% endif %}</div>
-        <div class="result_data">
-          {% if task.result %}
-            <span class="status_done">Done</span>
-          {% elif task.expired() %}
-            <span class="status_expired">Processing expired, back on queue</span>
-          {% elif task.requested_at %}
-            <span class="status_processing">Processing...</span>
-          {% else %}
-            <span class="status_queue">On queue</span>
-          {% endif %}
-        </div>
-        <div class="result_data">
-          {% if task.result %}
-            <button onclick="get_data({{ task.id }});">Show map</button>
-            <span style="fa-icon"><a href="{{ url_for('api.download_result', id=task.id) }}"><i class="fa-solid fa-file-csv fa-xl"></i></a></span>
-          {% endif %}
-        </div>
+    <div class="results_list">
+      <div class="results_header">
+        <div class="results_header_label">#</div>
+        <div class="results_header_label">Created at</div>
+        <div class="results_header_label">Started at</div>
+        <div class="results_header_label">Status</div>
+        <div class="results_header_label"></div>
       </div>
-    {% endfor %}
+      {% for task in tasks %}
+        <div class="result_item" onmouseover="show_marker({{ task.lat }}, {{ task.lon }});" onmouseout="clear_marker();">
+          <div class="result_data">{{ task.id }}</div>
+          <div class="result_data">{{ task.created_at }}</div>
+          <div class="result_data">{% if task.requested_at %}{{ task.requested_at }}{% endif %}</div>
+          <div class="result_data">
+            {% if task.result %}
+              <span class="status_done">Done</span>
+            {% elif task.expired() %}
+              <span class="status_expired">Processing expired, back on queue</span>
+            {% elif task.requested_at %}
+              <span class="status_processing">Processing...</span>
+            {% else %}
+              <span class="status_queue">On queue</span>
+            {% endif %}
+          </div>
+          <div class="result_data">
+            {% if task.result %}
+              <button onclick="get_data({{ task.id }});">Show map</button>
+              <span style="fa-icon"><a href="{{ url_for('api.download_result', id=task.id) }}"><i class="fa-solid fa-file-csv fa-xl"></i></a></span>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
   </div>
 
   <script>

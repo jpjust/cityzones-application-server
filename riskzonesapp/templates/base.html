@@ -2,35 +2,46 @@
 <html lang="en">
   <head>
     <title>{% block title %}{% endblock %} - RiskZones Web App</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://kit.fontawesome.com/6836d4b5c9.js" crossorigin="anonymous"></script>
     {% block htmlhead %}{% endblock %}
   </head>
   <body>
-    <h1>RiskZones Web</h1>
-    <nav>
-      <a href="{{ url_for ('map.show') }}">Map</a>
-      <a href="{{ url_for ('map.results') }}">Results</a>
-      <a href="{{ url_for ('help.index') }}">Help</a>
-      <a href="{{ url_for ('about.index') }}">About</a>
-    </nav>
-    <section class="messages">
-      {% if info_msg %}
-        <div class="info_msg">{{ info_msg }}</div>
-      {% endif %}
-      {% if error_msg %}
-        <div class="error_msg">{{ error_msg }}</div>
-      {% endif %}
-    </section>
-    <section class="content">
-      <header>
-        {% block header %}{% endblock %}
-      </header>
-      {% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
-      {% endfor %}
-      {% block content %}{% endblock %}
-    </section>
+    <div class="container">
+
+      <div class="top_bar">
+        <div class="title">
+          <h1>RiskZones Web</h1>
+          <h2>{% block header %}{% endblock %}</h2>
+        </div>
+
+        <div class="nav">
+          <a href="{{ url_for ('map.show') }}">Map</a>
+          <a href="{{ url_for ('map.results') }}">Results</a>
+          <a href="{{ url_for ('help.index') }}">Help</a>
+          <a href="{{ url_for ('about.index') }}">About</a>
+        </div>
+      </div>
+
+      <div class="messages">
+        {% for message in get_flashed_messages() %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+
+        <section class="messages">
+          {% if info_msg %}
+            <div class="info_msg">{{ info_msg }}</div>
+          {% endif %}
+          {% if error_msg %}
+            <div class="error_msg">{{ error_msg }}</div>
+          {% endif %}
+        </section>
+      </div>
+
+      <div class="content">
+        {% block content %}{% endblock %}
+      </div>
+
+    </div>
   </body>
 </html>
