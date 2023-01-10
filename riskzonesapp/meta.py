@@ -71,8 +71,8 @@ def make_config_file(polygon: list, zl: int) -> tuple:
         "geojson": f"{base_filename}.geojson",
         "pois": f"{base_filename}.osm",
         "pois_types": {
-            "amenity": [],
-            "railway": []
+            "amenity": {},
+            "railway": {}
         },
         "edu_alg": "none",
         "output": f"{base_filename}_map.csv",

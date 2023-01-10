@@ -11,7 +11,7 @@ def show():
 
     Shows the map centered on FEUP.
     '''
-    return render_template('map/index.html', lat='-8.596', lon='41.178')
+    return render_template('map/index.html', lon='-8.596', lat='41.178')
 
 @bp.route('/run', methods=['POST'])
 def run():
@@ -24,9 +24,17 @@ def run():
     try:
         # Form data
         zl           = int(request.form['zl'])
+
         poi_hospital = ('poi_hospital' in request.form.keys())
         poi_firedept = ('poi_firedept' in request.form.keys())
         poi_police   = ('poi_police'   in request.form.keys())
+        poi_metro    = ('poi_metro'    in request.form.keys())
+
+        w_hospital   = float(request.form['w_hospital']) if poi_hospital else 0
+        w_firedept   = float(request.form['w_firedept']) if poi_firedept else 0
+        w_police     = float(request.form['w_police'])   if poi_police   else 0
+        w_metro      = float(request.form['w_metro'])    if poi_metro    else 0
+
         polygon      = eval(request.form['polygon'])
 
         # Generate configuration files
@@ -35,9 +43,10 @@ def run():
         center_lon = (conf['left'] + conf['right']) /2
         center_lat = (conf['bottom'] + conf['top']) /2
 
-        if poi_hospital: conf['pois_types']['amenity'].append('hospital')
-        if poi_firedept: conf['pois_types']['amenity'].append('fire_station')
-        if poi_police:   conf['pois_types']['amenity'].append('police')
+        if poi_hospital: conf['pois_types']['amenity']['hospital'] = {'w': w_hospital}
+        if poi_firedept: conf['pois_types']['amenity']['fire_station'] = {'w': w_firedept}
+        if poi_police:   conf['pois_types']['amenity']['police'] = {'w': w_police}
+        if poi_metro:    conf['pois_types']['railway']['station'] = {'w': w_metro}
 
         # Store in database        
         with current_app.app_context():
@@ -45,7 +54,7 @@ def run():
             models.db.session.add(task)
             models.db.session.commit()
 
-            return render_template('map/index.html', info_msg=f'Your request was successfully queued. Request number: {task.id}.', lat=polygon[0][0], lon=polygon[0][1])
+            return render_template('map/index.html', info_msg=f'Your request was successfully queued. Request number: {task.id}.', lat=center_lat, lon=center_lon)
 
     except KeyError:
         return render_template('map/index.html', error_msg='Error: all fields are mandatory.')
