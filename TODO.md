@@ -2,9 +2,11 @@
 
 Read data line by line instead of reading it all at once. Actually this is being done already, but think of streaming it to the browser instead of sending at once. Check the size of an int in Python to see if storing a list of all coordinates uses too much memory or not.
 
-# Clear last marker button
+Another point is to not send all the points, but an interpolarized version with less points (set a maximum number of points).
 
-Add a button to clear the last marker, so the user can delete it if clicked some point accidentally.
+# Checkbox to not re-center the map
+
+Add a checkbox to disable re-centering the map when loading another result.
 
 # Add a feedback to "Show map" button
 

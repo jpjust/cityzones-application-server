@@ -129,12 +129,12 @@ input {
 
 .results_header {
   display: table-row;
-  background-color: lightgray;
 }
 
 .results_header_label {
   display: table-cell;
   padding: 5px;
+  font-weight: bold;
 }
 
 .result_item {
