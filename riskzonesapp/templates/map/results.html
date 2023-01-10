@@ -21,6 +21,7 @@
         <div class="results_header_label">Status</div>
         <div class="results_header_label"></div>
       </div>
+
       {% for task in tasks %}
         <div class="result_item" onmouseover="show_marker({{ task.lat }}, {{ task.lon }});" onmouseout="clear_marker();">
           <div class="result_data">{{ task.id }}</div>
@@ -45,6 +46,11 @@
           </div>
         </div>
       {% endfor %}
+
+      <div>
+        <input type="checkbox" id="chk_norecenter" name="chk_norecenter" value="1">
+        <label for="chk_norecenter">Do not recenter the map</label>
+      </div>
     </div>
   </div>
 
@@ -67,6 +73,7 @@
     }
 
     function get_data(id) {
+      let chk_norecenter = document.getElementById('chk_norecenter');
       let button = document.getElementById('btn_' + id);
       button.innerHTML = 'Loading...';
       button.disabled = true;
@@ -96,7 +103,10 @@
             let circle = L.circle([value[1], value[0]], {radius: 5, color: '#ff0000', stroke: false, fillOpacity: 0.5}).addTo(map);
             circles.push(circle);
           });
-          map.setView([json['center_lat'], json['center_lon']], 10);
+          
+          if (!chk_norecenter.checked) {
+            map.setView([json['center_lat'], json['center_lon']], 10);
+          }
           button.innerHTML = 'Show map';
           button.disabled = false;
         })
