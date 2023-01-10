@@ -91,16 +91,17 @@
             circle = circles.pop();
             map.removeLayer(circle);
           }
+          let r = json['zl'] / 2;
           json['1'].forEach((value, index, array) => {
-            let circle = L.circle([value[1], value[0]], {radius: 5, color: '#00ff00', stroke: false, fillOpacity: 0.5}).addTo(map);
+            let circle = L.circle([value[1], value[0]], {radius: r, color: '#00ff00', stroke: false, fillOpacity: 0.5}).addTo(map);
             circles.push(circle);
           });
           json['2'].forEach((value, index, array) => {
-            let circle = L.circle([value[1], value[0]], {radius: 5, color: '#ffff00', stroke: false, fillOpacity: 0.5}).addTo(map);
+            let circle = L.circle([value[1], value[0]], {radius: r, color: '#ffff00', stroke: false, fillOpacity: 0.5}).addTo(map);
             circles.push(circle);
           });
           json['3'].forEach((value, index, array) => {
-            let circle = L.circle([value[1], value[0]], {radius: 5, color: '#ff0000', stroke: false, fillOpacity: 0.5}).addTo(map);
+            let circle = L.circle([value[1], value[0]], {radius: r, color: '#ff0000', stroke: false, fillOpacity: 0.5}).addTo(map);
             circles.push(circle);
           });
           

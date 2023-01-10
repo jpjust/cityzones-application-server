@@ -49,6 +49,7 @@ def get_result(id):
         classification = {
             'center_lat': 0,
             'center_lon': 0,
+            'zl': result.task.config['zone_size'],
             '1': [],
             '2': [],
             '3': []
