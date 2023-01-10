@@ -87,6 +87,18 @@ body {
   box-shadow: var(--shadowconf)
 }
 
+.mapform_inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.mapform_inner_horizontal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
 button {
   color: green;
   background: rgb(200, 255, 200);

@@ -19,25 +19,64 @@
         <input type="hidden" id="center_lat" value="{{ lat }}">
         <input type="hidden" id="center_lon" value="{{ lon }}">
 
-        <label for="zl">Zone lenght (zl):</label>
-        <input type="text" id="zl" name="zl" size="5" value="30" required>
-
-        <div>
-          <span>Points of Interest (PoIs):</span>
-          <br>
-          <input type="checkbox" id="poi_hospital" name="poi_hospital" value="1" checked>
-          <label for="poi_hospital"> Hospitals</label>
-          <br>
-          <input type="checkbox" id="poi_firedept" name="poi_firedept" value="1" checked>
-          <label for="poi_firedept"> Fire Stations</label>
-          <br>
-          <input type="checkbox" id="poi_police"   name="poi_police"   value="1" checked>
-          <label for="poi_police"> Police Stations</label>
-        </div>
-
-        <div style="display:flex; flex-direction: column;">
-          <button type="submit">Request map</button>
+        <div class="mapform_inner">
+          <button type="button" onclick="clearlastmarker();">Clear last marker</button>
           <button type="button" class="button_red" onclick="clearmap();">Clear map</button>
+  
+          <p style="text-align: center;"><strong>Settings</strong></p>
+
+          <div class="mapform_inner_horizontal">
+            <label for="zl">Zone lenght (zl):</label>
+            <input type="text" id="zl" name="zl" size="5" value="30" required>
+          </div>
+  
+          <p style="text-align: center;"><strong>Points of Interest (PoIs)</strong></p>
+          
+          <div class="mapform_inner_horizontal">
+            <div>
+              <input type="checkbox" id="poi_hospital" name="poi_hospital" value="1" checked>
+              <label for="poi_hospital">Hospitals</label>
+            </div>
+            <div>
+              <label for="w_hospital">f(p):</label>
+              <input type="text" id="w_hospital" name="w_hospital" value="10" size="2" required>
+            </div>
+          </div>
+          
+          <div class="mapform_inner_horizontal">
+            <div>
+              <input type="checkbox" id="poi_firedept" name="poi_firedept" value="1" checked>
+              <label for="poi_firedept">Fire Stations</label>
+            </div>
+            <div>
+              <label for="w_firedept">f(p):</label>
+              <input type="text" id="w_firedept" name="w_firedept" value="5" size="2" required>
+            </div>
+          </div>
+          
+          <div class="mapform_inner_horizontal">
+            <div>
+              <input type="checkbox" id="poi_police"   name="poi_police"   value="1" checked>
+              <label for="poi_police">Police Stations</label>
+            </div>
+            <div>
+              <label for="w_police">f(p):</label>
+              <input type="text" id="w_police" name="w_police" value="2" size="2" required>
+            </div>
+          </div>
+
+          <div class="mapform_inner_horizontal">
+            <div>
+              <input type="checkbox" id="poi_metro"   name="poi_metro"   value="1">
+              <label for="poi_metro">Metro Stations</label>
+            </div>
+            <div>
+              <label for="w_metro">f(p):</label>
+              <input type="text" id="w_metro" name="w_metro" value="1" size="2" required>
+            </div>
+          </div>
+
+          <button type="submit">Request map</button>
         </div>
       </form>
     </div>
@@ -80,6 +119,25 @@
       }
 
       closed = false;
+    }
+
+    /**
+     *  Clear last marker function.
+     *
+     *  Clears the last marker on the map. Works like an undo button.
+     */
+    function clearlastmarker() {
+      if (markers.length > 0) {
+        marker = markers.pop();
+        polpoints.pop();
+        map.removeLayer(marker);
+      }
+      
+      if (polygon) {
+        map.removeLayer(polygon);
+        polygon = null;
+        closed = false;
+      }
     }
 
     /**
