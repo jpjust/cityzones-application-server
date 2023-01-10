@@ -18,7 +18,7 @@ body {
   padding-left: 5px;
   border: 1pt black solid;
   background-color: aliceblue;
-  box-shadow: var(--shadowconf)
+  box-shadow: var(--shadowconf);
 }
 
 .container {
@@ -76,7 +76,7 @@ body {
   flex-grow: 1;
   margin-right: 5px;
   border: 1px black solid;
-  box-shadow: var(--shadowconf)
+  box-shadow: var(--shadowconf);
 }
 
 .mapform {
@@ -84,7 +84,7 @@ body {
   padding: 5px;
   border: 1pt black solid;
   background-color: aliceblue;
-  box-shadow: var(--shadowconf)
+  box-shadow: var(--shadowconf);
 }
 
 .mapform_inner {
@@ -120,34 +120,20 @@ input {
 
 .results_list {
   font-size: small;
-  display: table;
+  display: flex;
+  flex-direction: column;
   padding: 5px;
   border: 1pt black solid;
   background-color: aliceblue;
-  box-shadow: var(--shadowconf)
-}
-
-.results_header {
-  display: table-row;
-}
-
-.results_header_label {
-  display: table-cell;
-  padding: 5px;
-  font-weight: bold;
-}
-
-.result_item {
-  display: table-row;
+  box-shadow: var(--shadowconf);
+  justify-content: space-between;
 }
 
 .result_item:hover {
   background-color: lightblue;
 }
 
-.result_data {
-  display: table-cell;
-  padding: 5px;
+.result_cell {
   border-top: 1pt black solid;
 }
 

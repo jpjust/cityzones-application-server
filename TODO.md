@@ -4,9 +4,9 @@ Read data line by line instead of reading it all at once. Actually this is being
 
 Another point is to not send all the points, but an interpolarized version with less points (set a maximum number of points).
 
-# Add metadata to the tasks
+# Download config and GeoJSON
 
-Maybe a description and who requested it, then show it in the results list so it would be easier to know about a task before loading its results. Also show the CSV data size.
+Add a button to download config and GeoJSON of a task.
 
 # Limit grid size
 

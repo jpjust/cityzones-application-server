@@ -37,7 +37,22 @@ class Task(db.Model):
 
         request_exp = datetime.now() - timedelta(minutes=int(os.getenv('TASK_REQ_EXP')))
         return self.requested_at < request_exp
+    
+    def task_data(self):
+        data = {
+            'zl': self.config['zone_size'],
+            'pois': {}
+        }
 
+        pois_types = self.config['pois_types']
+        for poi in pois_types['amenity'].keys():
+            data['pois'][poi] = pois_types['amenity'][poi]['w']
+        
+        for poi in pois_types['railway'].keys():
+            data['pois'][poi] = pois_types['railway'][poi]['w']
+
+        return data
+        
 class Result(db.Model):
     '''
     Model for results table.
