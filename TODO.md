@@ -8,10 +8,6 @@ Another point is to not send all the points, but an interpolarized version with 
 
 Add a checkbox to disable re-centering the map when loading another result.
 
-# Add a feedback to "Show map" button
-
-Maybe a "Loading..." string just to let the user knows that the map is loading.
-
 # Add metadata to the tasks
 
 Maybe a description and who requested it, then show it in the results list so it would be easier to know about a task before loading its results. Also show the CSV data size.
