@@ -71,6 +71,8 @@
             </tr>
             <tr class="result_item" onmouseover="show_marker({{ task.lat }}, {{ task.lon }});" onmouseout="clear_marker();">
               <td colspan="5">
+                {{ task.description }}
+                <br>
                 zl={{ task.task_data()['zl'] }}
                 &nbsp;
                 U={{ task.config['edus'] }}

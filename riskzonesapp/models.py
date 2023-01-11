@@ -20,6 +20,7 @@ class Task(db.Model):
     lat = db.Column(db.Float, nullable=False)
     lon = db.Column(db.Float, nullable=False)
     requested_at = db.Column(db.DateTime(timezone=True), nullable=True)
+    description = db.Column(db.String(100), nullable=True)
 
     result = relationship("Result", back_populates="task")
 

@@ -29,6 +29,7 @@ def run():
         zl           = int(request.form['zl'])
         edus         = int(request.form['edus'])
         edu_alg      = request.form['edu_alg']
+        description  = request.form['description']
 
         poi_hospital = ('poi_hospital' in request.form.keys())
         poi_firedept = ('poi_firedept' in request.form.keys())
@@ -59,6 +60,7 @@ def run():
         # Store in database        
         with current_app.app_context():
             task = models.Task(base_filename, conf, geojson, center_lat, center_lon)
+            task.description = description
             models.db.session.add(task)
             models.db.session.commit()
 
