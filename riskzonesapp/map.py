@@ -4,6 +4,9 @@ from . import meta, models
 bp = Blueprint('map', __name__, url_prefix='/map')
 db = models.db
 
+DEFAULT_MAP_LON = -8.596
+DEFAULT_MAP_LAT = 41.178
+
 @bp.route('/show', methods=['GET'])
 def show():
     '''
@@ -11,7 +14,7 @@ def show():
 
     Shows the map centered on FEUP.
     '''
-    return render_template('map/index.html', lon='-8.596', lat='41.178')
+    return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT)
 
 @bp.route('/run', methods=['POST'])
 def run():
@@ -37,6 +40,9 @@ def run():
 
         polygon      = eval(request.form['polygon'])
 
+        if len(polygon) < 3:
+            return render_template('map/index.html', error_msg='At least 3 points are required for an AoI polygon.', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT)
+
         # Generate configuration files
         geojson = meta.make_polygon(polygon)
         base_filename, conf = meta.make_config_file(polygon, zl)
@@ -57,11 +63,11 @@ def run():
             return render_template('map/index.html', info_msg=f'Your request was successfully queued. Request number: {task.id}.', lat=center_lat, lon=center_lon)
 
     except KeyError:
-        return render_template('map/index.html', error_msg='Error: all fields are mandatory.')
+        return render_template('map/index.html', error_msg='Error: all fields are mandatory.', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT)
     except IndexError:
-        return render_template('map/index.html', error_msg='There was an error trying to parse the AoI polygon. Check if you created a valid AoI before submitting a map request.')
+        return render_template('map/index.html', error_msg='There was an error trying to parse the AoI polygon. Check if you created a valid AoI before submitting a map request.', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT)
     except ValueError:
-        return render_template('map/index.html', error_msg='There was an error trying to parse some parameters. Check if you entered proper values.')
+        return render_template('map/index.html', error_msg='There was an error trying to parse some parameters. Check if you entered proper values.', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT)
 
 @bp.route('/results', methods=['GET'])
 def results():
