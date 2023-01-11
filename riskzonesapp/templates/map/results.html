@@ -112,6 +112,8 @@
             circle = circles.pop();
             map.removeLayer(circle);
           }
+
+          // Add zones
           let r = json['zl'] / 2;
           json['1'].forEach((value, index, array) => {
             let circle = L.circle([value[1], value[0]], {radius: r, color: '#00ff00', stroke: false, fillOpacity: 0.5}).addTo(map);
@@ -125,10 +127,17 @@
             let circle = L.circle([value[1], value[0]], {radius: r, color: '#ff0000', stroke: false, fillOpacity: 0.5}).addTo(map);
             circles.push(circle);
           });
-          
+
+          // Add EDUs
+          json['edus'].forEach((value, index, array) => {
+            let circle = L.circle([value[1], value[0]], {radius: 10, color: '#000000', stroke: false, fillOpacity: 1}).addTo(map);
+            circles.push(circle);
+          });
+
           if (!chk_norecenter.checked) {
             map.setView([json['center_lat'], json['center_lon']], 10);
           }
+
           button.innerHTML = 'Show map';
           button.disabled = false;
         })

@@ -46,13 +46,15 @@ def get_result(id):
             return Response(json.dumps({'msg': 'There is no result for this task yet.'}), headers={'Content-type': 'application/json'}, status=404)
 
         map_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_map.csv'
+        edus_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_edus.csv'
         classification = {
             'center_lat': 0,
             'center_lon': 0,
             'zl': result.task.config['zone_size'],
             '1': [],
             '2': [],
-            '3': []
+            '3': [],
+            'edus': []
         }
 
         left = 180
@@ -61,6 +63,7 @@ def get_result(id):
         top = -90
 
         try:
+            # Classification data
             fp = open(map_file, 'r')
             reader = csv.reader(fp)
             fp.readline()  # Skip header line
@@ -79,6 +82,18 @@ def get_result(id):
 
             classification['center_lat'] = (bottom + top) / 2
             classification['center_lon'] = (left + right) / 2
+
+            # EDUs data
+            fp = open(edus_file, 'r')
+            reader = csv.reader(fp)
+            fp.readline()  # Skip header line
+
+            for row in reader:
+                geodata = json.loads(row[1])
+                coord = geodata['coordinates']
+                classification['edus'].append(coord)
+
+            fp.close()
 
             return classification
         except FileNotFoundError:
@@ -151,12 +166,12 @@ def download_result(id):
             return Response(json.dumps({'msg': 'There is no result for this task yet.'}), headers={'Content-type': 'application/json'}, status=404)
 
         map_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_map.csv'
-        #edus_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_edus.csv'
+        edus_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_edus.csv'
         zip_data = io.BytesIO()
 
         with ZipFile(zip_data, 'w', compression=ZIP_DEFLATED, compresslevel=9) as myzip:
             myzip.write(map_file, arcname=f'{result.task.base_filename}_map.csv')
-            #myzip.write(edus_file, arcname=f'{result.task.base_filename}_edus.csv')
+            myzip.write(edus_file, arcname=f'{result.task.base_filename}_edus.csv')
         
         zip_data.seek(0)
         return send_file(
