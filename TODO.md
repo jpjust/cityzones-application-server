@@ -16,6 +16,10 @@ Maybe it will be a good idea to limit grid size and avoid using too much memory 
 
 If a task takes too long to get done (a couple of days, for example), flag it as problematic and stop serving it.
 
+# Recreate a request
+
+Add a button to the results list so that an user can open the map view with that settings and repeat the request (or change some settings for a new request).
+
 # Other functionalities
 
 - More PoIs categories
