@@ -50,6 +50,7 @@ body {
   color: blue;
   background: lightblue;
   border: 1px blue solid;
+  box-shadow: var(--shadowconf);
   padding: 5px;
 }
 
@@ -57,6 +58,7 @@ body {
   color: red;
   background: rgb(255, 196, 196);
   border: 1px red solid;
+  box-shadow: var(--shadowconf);
   padding: 5px;
 }
 
