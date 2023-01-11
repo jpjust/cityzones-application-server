@@ -4,6 +4,7 @@ load_dotenv()
 import os
 
 from flask import Flask
+from flask_alembic import Alembic
 from . import models, api, map, about, help
 
 def create_app(test_config=None):
@@ -16,6 +17,8 @@ def create_app(test_config=None):
         SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE_URI'),
     )
     models.db.init_app(app)
+    alembic = Alembic()
+    alembic.init_app(app)
 
     # Create database tables
     with app.app_context():
