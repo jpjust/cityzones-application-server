@@ -9,6 +9,26 @@
   {% block title %}Results{% endblock %}
 {% endblock %}
 
+{% macro render_pagination(pagination, endpoint) %}
+  <div class=page-items>
+    Showing results {{ pagination.first }} - {{ pagination.last }} of {{ pagination.total }}
+  </div>
+  <div class=pagination>
+    Select page:
+    {% for page in pagination.iter_pages() %}
+      {% if page %}
+        {% if page != pagination.page %}
+          <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+        {% else %}
+          <strong>{{ page }}</strong>
+        {% endif %}
+      {% else %}
+        <span class=ellipsis>…</span>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endmacro %}
+
 {% block content %}
   <div class="map_ui">
     <div id="map"></div>
@@ -71,6 +91,7 @@
       <div>
         <input type="checkbox" id="chk_norecenter" name="chk_norecenter" value="1">
         <label for="chk_norecenter">Do not recenter the map</label>
+        {{ render_pagination(tasks, 'map.results') }}
       </div>
     </div>
   </div>

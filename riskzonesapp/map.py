@@ -79,5 +79,5 @@ def results():
     Shows the results of previous requests to display on map.
     '''
     with current_app.app_context():
-        tasks = db.session.query(models.Task).order_by(models.Task.created_at.desc()).all()
+        tasks = db.paginate(db.select(models.Task).order_by(models.Task.created_at.desc()), max_per_page=10)
         return render_template('map/results.html', tasks=tasks)
