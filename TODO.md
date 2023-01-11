@@ -10,7 +10,7 @@ Add a button to download config and GeoJSON of a task.
 
 # Limit grid size
 
-Maybe it will be a good idea to limit grid size and avoid using too much memory at the worker site.
+Maybe it will be a good idea to limit grid size and avoid using too much memory at the worker site. One idea is to calculate the area of the AoI in server side and divide by zl to get the number of zones. It can be a zones limit to avoid huge tasks.
 
 # Final expiration
 
