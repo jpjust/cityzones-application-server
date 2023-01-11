@@ -23,5 +23,3 @@ Add a button to the results list so that an user can open the map view with that
 # Other functionalities
 
 - More PoIs categories
-- EDUs settings
-- Paginate results list
