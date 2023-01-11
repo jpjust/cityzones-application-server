@@ -41,7 +41,7 @@ def make_polygon(polygon: list) -> dict:
 
     return pol_dict
 
-def make_config_file(polygon: list, zl: int) -> tuple:
+def make_config_file(polygon: list, zl: int, edus: int, edu_alg: str) -> tuple:
     '''
     Generate a JSON configuration for the riskzones rool.
     '''
@@ -67,14 +67,14 @@ def make_config_file(polygon: list, zl: int) -> tuple:
         "zone_size": zl,
         "cache_zones": True,
         "M": int(os.getenv('RZ_M')),
-        "edus": int(os.getenv('RZ_EDUS')),
+        "edus": edus,
         "geojson": f"{base_filename}.geojson",
         "pois": f"{base_filename}.osm",
         "pois_types": {
             "amenity": {},
             "railway": {}
         },
-        "edu_alg": "none",
+        "edu_alg": edu_alg,
         "output": f"{base_filename}_map.csv",
         "output_edus": f"{base_filename}_edus.csv",
         "output_roads": f"{base_filename}_roads.csv",

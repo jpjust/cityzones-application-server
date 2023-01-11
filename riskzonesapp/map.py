@@ -27,6 +27,8 @@ def run():
     try:
         # Form data
         zl           = int(request.form['zl'])
+        edus         = int(request.form['edus'])
+        edu_alg      = request.form['edu_alg']
 
         poi_hospital = ('poi_hospital' in request.form.keys())
         poi_firedept = ('poi_firedept' in request.form.keys())
@@ -45,7 +47,7 @@ def run():
 
         # Generate configuration files
         geojson = meta.make_polygon(polygon)
-        base_filename, conf = meta.make_config_file(polygon, zl)
+        base_filename, conf = meta.make_config_file(polygon, zl, edus, edu_alg)
         center_lon = (conf['left'] + conf['right']) /2
         center_lat = (conf['bottom'] + conf['top']) /2
 

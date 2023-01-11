@@ -29,8 +29,8 @@
           {% for task in tasks %}
             <tr class="result_item" onmouseover="show_marker({{ task.lat }}, {{ task.lon }});" onmouseout="clear_marker();">
               <td class="result_cell">{{ task.id }}</td>
-              <td class="result_cell">{{ task.created_at }}</td>
-              <td class="result_cell">{% if task.requested_at %}{{ task.requested_at }}{% endif %}</td>
+              <td class="result_cell">{{ task.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+              <td class="result_cell">{% if task.requested_at %}{{ task.requested_at.strftime('%d/%m/%Y %H:%M') }}{% endif %}</td>
               <td class="result_cell">
                 {% if task.result %}
                   <span class="status_done">Done</span>
@@ -53,6 +53,10 @@
               <td colspan="5">
                 zl={{ task.task_data()['zl'] }}
                 &nbsp;
+                U={{ task.config['edus'] }}
+                &nbsp;
+                alg={{ task.config['edu_alg'] }}
+                <br>
                 {% for poi in task.task_data()['pois'] %}
                   {{ poi }}: f(p)={{ task.task_data()['pois'][poi] }}
                   &nbsp;

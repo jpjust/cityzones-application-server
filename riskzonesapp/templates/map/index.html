@@ -76,6 +76,50 @@
             </div>
           </div>
 
+          <p style="text-align: center;"><strong>EDUs positioning</strong></p>
+          
+          <div class="mapform_inner_horizontal">
+            <div>
+              <label for="edus">Number of EDUs:</label>
+              <input type="text" id="edus" name="edus" size="5" value="300" required>
+            </div>
+          </div>
+
+          <div class="mapform_inner_horizontal">
+            <div>
+              <input type="radio" id="alg_none" name="edu_alg" value="none" checked>
+              <label for="alg_none">None (no EDUs positioning)</label>
+            </div>
+          </div>
+          
+          <div class="mapform_inner_horizontal">
+            <div>
+              <input type="radio" id="alg_random" name="edu_alg" value="random">
+              <label for="alg_random">Random</label>
+            </div>
+          </div>
+
+          <div class="mapform_inner_horizontal">
+            <div>
+              <input type="radio" id="alg_balanced" name="edu_alg" value="balanced">
+              <label for="alg_balanced">Balanced</label>
+            </div>
+          </div>
+
+          <div class="mapform_inner_horizontal">
+            <div>
+              <input type="radio" id="alg_enhanced" name="edu_alg" value="enhanced">
+              <label for="alg_enhanced">Balanced+</label>
+            </div>
+          </div>
+
+          <div class="mapform_inner_horizontal">
+            <div>
+              <input type="radio" id="alg_restricted" name="edu_alg" value="restricted">
+              <label for="alg_restricted">Restricted</label>
+            </div>
+          </div>
+
           <button type="submit">Request map</button>
         </div>
       </form>
