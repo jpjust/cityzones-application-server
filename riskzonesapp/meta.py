@@ -65,7 +65,7 @@ def make_config_file(polygon: list, zl: int, edus: int, edu_alg: str) -> tuple:
         "right": right,
         "top": top,
         "zone_size": zl,
-        "cache_zones": True,
+        "cache_zones": False,
         "M": int(os.getenv('RZ_M')),
         "edus": edus,
         "geojson": f"{base_filename}.geojson",
