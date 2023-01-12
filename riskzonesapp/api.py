@@ -131,6 +131,7 @@ def post_result(id):
                 if line == b'\r\n':
                     while True:
                         line = request.stream.readline()
+                        if fp == None or fp.closed: continue
 
                         # Check if the contents of the file has ended
                         if line.startswith(boundary):
