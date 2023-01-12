@@ -4,7 +4,10 @@ load_dotenv()
 import os
 
 from flask import Flask
+from flask.cli import with_appcontext
 from flask_alembic import Alembic
+import click
+import secrets
 from . import models, api, map, about, help
 
 def create_app(test_config=None):
@@ -43,6 +46,15 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    # create command function
+    @click.command(name='gen-api-key')
+    @with_appcontext
+    def gen_api_key():
+        print(secrets.token_hex(32))
+    
+    # add command function to cli commands
+    app.cli.add_command(gen_api_key)
 
     # a simple page that says hello
     @app.route('/')

@@ -1,5 +1,10 @@
-from flask import Blueprint, current_app, render_template, request
+from flask import Blueprint, Response, current_app, render_template, request, send_file
 from . import meta, models
+import os
+import io
+import csv
+import json
+from zipfile import ZipFile, ZIP_DEFLATED
 
 bp = Blueprint('map', __name__, url_prefix='/map')
 db = models.db
@@ -83,3 +88,102 @@ def results():
     with current_app.app_context():
         tasks = db.paginate(db.select(models.Task).order_by(models.Task.created_at.desc()), max_per_page=10)
         return render_template('map/results.html', tasks=tasks)
+
+@bp.route('/result/<int:id>', methods=['GET'])
+def get_result(id):
+    '''
+    Get a result by its ID and respond with its map data.
+    '''
+    with current_app.app_context():
+        result = db.session.query(models.Result).where(models.Result.task_id == id).first()
+
+        if result == None:
+            return Response(json.dumps({'msg': 'There is no result for this task yet.'}), headers={'Content-type': 'application/json'}, status=404)
+
+        map_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_map.csv'
+        edus_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_edus.csv'
+        classification = {
+            'center_lat': 0,
+            'center_lon': 0,
+            'zl': result.task.config['zone_size'],
+            '1': [],
+            '2': [],
+            '3': [],
+            'edus': []
+        }
+
+        left = 180
+        right = -180
+        bottom = 90
+        top = -90
+
+        try:
+            # Classification data
+            fp = open(map_file, 'r')
+            reader = csv.reader(fp)
+            fp.readline()  # Skip header line
+
+            for row in reader:
+                M = row[1]
+                geodata = json.loads(row[2])
+                coord = geodata['coordinates']
+                classification[M].append(coord)
+                if coord[0] < left:   left   = coord[0]
+                if coord[0] > right:  right  = coord[0]
+                if coord[1] < bottom: bottom = coord[1]
+                if coord[1] > top:    top    = coord[1]
+
+            fp.close()
+
+            classification['center_lat'] = (bottom + top) / 2
+            classification['center_lon'] = (left + right) / 2
+
+            # EDUs data
+            fp = open(edus_file, 'r')
+            reader = csv.reader(fp)
+            fp.readline()  # Skip header line
+
+            for row in reader:
+                geodata = json.loads(row[1])
+                coord = geodata['coordinates']
+                classification['edus'].append(coord)
+
+            fp.close()
+
+            return classification
+        except FileNotFoundError:
+            return Response(json.dumps({'msg': 'Results file not found for this task.'}), headers={'Content-type': 'application/json'}, status=500)
+
+@bp.route('/result/download/<int:id>', methods=['GET'])
+def download_result(id):
+    '''
+    Get a result by its ID and respond with its CSV files in ZIP format.
+    '''
+    with current_app.app_context():
+        result = db.session.query(models.Result).where(models.Result.task_id == id).first()
+
+        if result == None:
+            return Response(json.dumps({'msg': 'There is no result for this task yet.'}), headers={'Content-type': 'application/json'}, status=404)
+
+        map_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_map.csv'
+        edus_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_edus.csv'
+        roads_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_roads.csv'
+        zip_data = io.BytesIO()
+
+        try:
+            with ZipFile(zip_data, 'w', compression=ZIP_DEFLATED, compresslevel=9) as myzip:
+                myzip.write(map_file, arcname=f'{result.task.base_filename}_map.csv')
+                if os.path.isfile(edus_file):
+                    myzip.write(edus_file, arcname=f'{result.task.base_filename}_edus.csv')
+                if os.path.isfile(roads_file):
+                    myzip.write(roads_file, arcname=f'{result.task.base_filename}_roads.csv')
+        except FileNotFoundError:
+            return Response(json.dumps({'msg': 'The map file for this task is missing!'}), headers={'Content-type': 'application/json'}, status=404)
+        
+        zip_data.seek(0)
+        return send_file(
+            zip_data,
+            as_attachment=True,
+            download_name=f'{result.task.base_filename}.zip',
+            mimetype='application/zip'
+        )
