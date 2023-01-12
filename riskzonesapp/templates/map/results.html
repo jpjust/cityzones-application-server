@@ -55,6 +55,8 @@
                 <td class="result_cell">
                   {% if task.result %}
                     <span class="status_done">Done</span>
+                  {% elif task.failed() %}
+                    <span class="status_failed">Processing failed</span>  
                   {% elif task.expired() %}
                     <span class="status_expired">Processing expired, back on queue</span>
                   {% elif task.requested_at %}

@@ -18,11 +18,13 @@ def get_task():
     '''
     with current_app.app_context():
         request_exp = datetime.now() - timedelta(minutes=int(os.getenv('TASK_REQ_EXP')))
-        tasks = db.session.query(models.Task).where(or_(models.Task.requested_at < request_exp, models.Task.requested_at == None)).all()
+        max_requests = int(os.getenv('TASK_REQ_MAX'))
+        tasks = db.session.query(models.Task).where(and_(models.Task.requests < max_requests, or_(models.Task.requested_at < request_exp, models.Task.requested_at == None))).all()
 
         for task in tasks:
             if len(task.result) == 0:
                 task.requested_at = datetime.now()
+                task.requests += 1
                 db.session.commit()
 
                 data = {
@@ -131,17 +133,19 @@ def post_result(id):
                 if line == b'\r\n':
                     while True:
                         line = request.stream.readline()
-                        if fp == None or fp.closed: continue
 
                         # Check if the contents of the file has ended
                         if line.startswith(boundary):
+                            if fp == None or fp.closed: break
+
                             fp.seek(-1, io.SEEK_CUR)
                             fp.truncate()
                             fp.close()
                             break
-                        
-                        fp.write(line.strip())
-                        fp.write(b'\n')
+
+                        if fp != None and not fp.closed:
+                            fp.write(line.strip())
+                            fp.write(b'\n')
 
                 # Other case is a line of headers
                 else:
@@ -151,6 +155,9 @@ def post_result(id):
                     elif b'name="edus"' in line:
                         if fp != None: fp.close()
                         fp = open(f'{os.getenv("RESULTS_DIR")}/{task.base_filename}_edus.csv', 'wb')
+                    elif b'name="roads"' in line:
+                        if fp != None: fp.close()
+                        fp = open(f'{os.getenv("RESULTS_DIR")}/{task.base_filename}_roads.csv', 'wb')
 
     except KeyError:
         return Response(json.dumps({'msg': 'Received data is incomplete.'}), headers={'Content-type': 'application/json'}, status=400)
@@ -168,11 +175,18 @@ def download_result(id):
 
         map_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_map.csv'
         edus_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_edus.csv'
+        roads_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_roads.csv'
         zip_data = io.BytesIO()
 
-        with ZipFile(zip_data, 'w', compression=ZIP_DEFLATED, compresslevel=9) as myzip:
-            myzip.write(map_file, arcname=f'{result.task.base_filename}_map.csv')
-            myzip.write(edus_file, arcname=f'{result.task.base_filename}_edus.csv')
+        try:
+            with ZipFile(zip_data, 'w', compression=ZIP_DEFLATED, compresslevel=9) as myzip:
+                myzip.write(map_file, arcname=f'{result.task.base_filename}_map.csv')
+                if os.path.isfile(edus_file):
+                    myzip.write(edus_file, arcname=f'{result.task.base_filename}_edus.csv')
+                if os.path.isfile(roads_file):
+                    myzip.write(roads_file, arcname=f'{result.task.base_filename}_roads.csv')
+        except FileNotFoundError:
+            return Response(json.dumps({'msg': 'The map file for this task is missing!'}), headers={'Content-type': 'application/json'}, status=404)
         
         zip_data.seek(0)
         return send_file(

@@ -21,6 +21,7 @@ class Task(db.Model):
     lon = db.Column(db.Float, nullable=False)
     requested_at = db.Column(db.DateTime(timezone=True), nullable=True)
     description = db.Column(db.String(100), nullable=True)
+    requests = db.Column(db.Integer, nullable=False, default=0)
 
     result = relationship("Result", back_populates="task")
 
@@ -38,6 +39,9 @@ class Task(db.Model):
 
         request_exp = datetime.now() - timedelta(minutes=int(os.getenv('TASK_REQ_EXP')))
         return self.requested_at < request_exp
+    
+    def failed(self):
+        return self.expired() and self.requests >= int(os.getenv('TASK_REQ_MAX'))
     
     def task_data(self):
         data = {
