@@ -4,6 +4,8 @@ Read data line by line instead of reading it all at once. Actually this is being
 
 Another point is to not send all the points, but an interpolarized version with less points (set a maximum number of points).
 
+Or limit the output. If the result has more than XXX coordinates, do not allow to send it.
+
 # Download config and GeoJSON
 
 Add a button to download config and GeoJSON of a task.
