@@ -184,6 +184,28 @@ def download_result(id):
         return send_file(
             zip_data,
             as_attachment=True,
-            download_name=f'{result.task.base_filename}.zip',
+            download_name=f'{result.task.base_filename}_results.zip',
+            mimetype='application/zip'
+        )
+
+@bp.route('/download/<int:id>', methods=['GET'])
+def download_task(id):
+    '''
+    Get a task by its ID and respond with its JSON and GeoJSON files in ZIP format.
+    '''
+    with current_app.app_context():
+        task = db.get_or_404(models.Task, id)
+
+        zip_data = io.BytesIO()
+
+        with ZipFile(zip_data, 'w', compression=ZIP_DEFLATED, compresslevel=9) as myzip:
+            myzip.writestr(f'{task.base_filename}.json', json.dumps(task.config))
+            myzip.writestr(f'{task.base_filename}.geojson', json.dumps(task.geojson))
+        
+        zip_data.seek(0)
+        return send_file(
+            zip_data,
+            as_attachment=True,
+            download_name=f'{task.base_filename}.zip',
             mimetype='application/zip'
         )

@@ -175,3 +175,7 @@ input {
 .status_failed {
   color: red;
 }
+
+.fa-icon a {
+  color: darkblue;
+}

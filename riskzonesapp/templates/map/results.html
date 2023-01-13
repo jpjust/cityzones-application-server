@@ -65,11 +65,12 @@
                     <span class="status_queue">On queue</span>
                   {% endif %}
                 </td>
-                <td class="result_cell">
+                <td class="result_cell" align="right">
                   {% if task.result %}
                     <button id="btn_{{ task.id }}" onclick="get_data({{ task.id }});">Show map</button>
-                    <span style="fa-icon"><a href="{{ url_for('map.download_result', id=task.id) }}"><i class="fa-solid fa-file-csv fa-xl"></i></a></span>
+                    <span class="fa-icon"><a href="{{ url_for('map.download_result', id=task.id) }}"><i class="fa-solid fa-file-csv fa-xl"></i></a></span>
                   {% endif %}
+                  <span class="fa-icon"><a href="{{ url_for('map.download_task', id=task.id) }}"><i class="fa-solid fa-file-arrow-down fa-xl"></i></a></span>
                 </td>
               </tr>
               <tr class="result_item" onmouseover="show_marker({{ task.lat }}, {{ task.lon }});" onmouseout="clear_marker();">
