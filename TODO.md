@@ -6,6 +6,8 @@ Another point is to not send all the points, but an interpolarized version with 
 
 Or limit the output. If the result has more than XXX coordinates, do not allow to send it.
 
+Or just warn the user that the output may be too big and slow down its browser. If the user accepts, stream the coordinates instead of sending a JSON object at once.
+
 # Limit grid size
 
 Maybe it will be a good idea to limit grid size and avoid using too much memory at the worker site. One idea is to calculate the area of the AoI in server side and divide by zl to get the number of zones. It can be a zones limit to avoid huge tasks.
