@@ -10,10 +10,6 @@ Or limit the output. If the result has more than XXX coordinates, do not allow t
 
 Maybe it will be a good idea to limit grid size and avoid using too much memory at the worker site. One idea is to calculate the area of the AoI in server side and divide by zl to get the number of zones. It can be a zones limit to avoid huge tasks.
 
-# Final expiration
-
-If a task takes too long to get done (a couple of days, for example), flag it as problematic and stop serving it.
-
 # Recreate a request
 
 Add a button to the results list so that an user can open the map view with that settings and repeat the request (or change some settings for a new request).

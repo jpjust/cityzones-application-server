@@ -67,9 +67,16 @@ class Result(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime(timezone=True), nullable=False)
     task_id = db.Column(db.Integer, sqlalchemy.ForeignKey(Task.id))
+    res_data = db.Column(db.JSON())
 
     task = relationship("Task", back_populates="result")
 
     def __init__(self, task_id):
         self.created_at = datetime.now()
         self.task_id = task_id
+
+    def get_data(self, key):
+        if self.res_data == None or not key in self.res_data.keys():
+            return 0
+        
+        return self.res_data.get(key)

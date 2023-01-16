@@ -78,6 +78,7 @@ def make_config_file(polygon: list, zl: int, edus: int, edu_alg: str) -> tuple:
         "output": f"{base_filename}_map.csv",
         "output_edus": f"{base_filename}_edus.csv",
         "output_roads": f"{base_filename}_roads.csv",
+        "res_data": f"{base_filename}_res_data.json",
     }
 
     return base_filename, base_conf

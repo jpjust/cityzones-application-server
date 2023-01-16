@@ -87,6 +87,18 @@
                     {{ poi }}: f(p)={{ task.task_data()['pois'][poi] }}
                     &nbsp;
                   {% endfor %}
+                  <br>
+                  {% if task.result %}
+                    Zones={{ '{:,}'.format(task.result[0].get_data('n_zones')) }}
+                    &nbsp;
+                    POIs={{ '{:,}'.format(task.result[0].get_data('n_pois')) }}
+                    &nbsp;
+                    EDUs={{ '{:,}'.format(task.result[0].get_data('n_edus')) }}
+                    &nbsp;
+                    tc={{ '%.3fs' % task.result[0].get_data('time_classification') }}
+                    &nbsp;
+                    tp={{ '%.3fs' % task.result[0].get_data('time_positioning') }}
+                  {% endif %}
                 </td>
               </tr>
           {% endfor %}

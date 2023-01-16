@@ -10,6 +10,24 @@ import secrets
 bp = Blueprint('api', __name__, url_prefix='/api')
 db = models.db
 
+def get_file_data(stream, fp, eof: str):
+    # Scan until the beginning of data
+    while True:
+        if stream.readline() == b'\r\n':
+            break
+
+    while True:
+        line = stream.readline()
+
+        # Check if the contents of the file has ended
+        if len(line) == 0 or line.startswith(eof):
+            fp.seek(-1, io.SEEK_CUR)
+            fp.truncate()
+            return
+        else:
+            fp.write(line.strip())
+            fp.write(b'\n')
+
 @bp.before_request
 def authorize():
     if secrets.compare_digest(str(request.headers.get('X-API-Key')), os.getenv("API_KEY")) == False:
@@ -55,6 +73,7 @@ def post_result(id):
             
             # Read stream
             fp = None
+            res_data = {}
             boundary = request.stream.readline().strip()
 
             while True:
@@ -62,41 +81,40 @@ def post_result(id):
 
                 # If there is no data, stream is over
                 if len(line) == 0:
-                    if fp != None: fp.close()
                     result = models.Result(task.id)
+                    result.res_data = res_data
                     models.db.session.add(result)
                     models.db.session.commit()
                     return Response(json.dumps({'msg': 'Data received succesfully.'}), headers={'Content-type': 'application/json'}, status=201)
 
-                # If line is blank, the file contents is about to begin
-                if line == b'\r\n':
-                    while True:
-                        line = request.stream.readline()
-
-                        # Check if the contents of the file has ended
-                        if line.startswith(boundary):
-                            if fp == None or fp.closed: break
-
-                            fp.seek(-1, io.SEEK_CUR)
-                            fp.truncate()
-                            fp.close()
-                            break
-
-                        if fp != None and not fp.closed:
-                            fp.write(line.strip())
-                            fp.write(b'\n')
-
                 # Other case is a line of headers
                 else:
-                    if b'name="map"' in line:
-                        if fp != None: fp.close()
-                        fp = open(f'{os.getenv("RESULTS_DIR")}/{task.base_filename}_map.csv', 'wb')
-                    elif b'name="edus"' in line:
-                        if fp != None: fp.close()
-                        fp = open(f'{os.getenv("RESULTS_DIR")}/{task.base_filename}_edus.csv', 'wb')
-                    elif b'name="roads"' in line:
-                        if fp != None: fp.close()
-                        fp = open(f'{os.getenv("RESULTS_DIR")}/{task.base_filename}_roads.csv', 'wb')
+                    if line.startswith(b'Content-Disposition: form-data'):
+                        # Get current data name
+                        dataname = ''
+                        header = line.split(b'; ')
+                        for item in header:
+                            item = item.strip()
+                            field = item.split(b'=')
+                            if field[0] == b'name':
+                                dataname = field[1].decode().replace('"', '').replace("'", "")
+                                break
+
+                        if fp != None:
+                            fp.close()
+
+                        if dataname in ['map', 'edus', 'roads']:
+                            fp = open(f'{os.getenv("RESULTS_DIR")}/{task.base_filename}_{dataname}.csv', 'wb')
+                            get_file_data(request.stream, fp, boundary)
+                            fp.close()
+                        
+                        elif dataname == 'res_data':
+                            fp = io.BytesIO()
+                            get_file_data(request.stream, fp, boundary)
+                            res_data = json.loads(fp.getvalue())
+                            fp.close()
 
     except KeyError:
         return Response(json.dumps({'msg': 'Received data is incomplete.'}), headers={'Content-type': 'application/json'}, status=400)
+    except ValueError:
+        return Response(json.dumps({'msg': 'Received header is incomplete.'}), headers={'Content-type': 'application/json'}, status=400)
