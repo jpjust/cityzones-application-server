@@ -50,6 +50,12 @@ def run():
 
         if len(polygon) < 3:
             return render_template('map/index.html', error_msg='At least 3 points are required for an AoI polygon.', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT)
+        
+        for coord in polygon:
+            lon = coord[0]
+            lat = coord[1]
+            if not (-90 < lat < 90) or not (-180 < lon < 180):
+                return render_template('map/index.html', error_msg='The selected AoI is invalid.', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT)
 
         # Generate configuration files
         geojson = meta.make_polygon(polygon)
