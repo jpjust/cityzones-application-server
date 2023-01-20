@@ -9,8 +9,8 @@ from zipfile import ZipFile, ZIP_DEFLATED
 bp = Blueprint('map', __name__, url_prefix='/map')
 db = models.db
 
-DEFAULT_MAP_LON = -8.596
-DEFAULT_MAP_LAT = 41.178
+DEFAULT_MAP_LON = -8.595449606742658
+DEFAULT_MAP_LAT = 41.1783048033954
 
 @bp.route('/show', methods=['GET'])
 def show():
