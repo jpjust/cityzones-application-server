@@ -209,3 +209,26 @@ def download_task(id):
             download_name=f'{task.base_filename}.zip',
             mimetype='application/zip'
         )
+
+@bp.route('/countries', methods=['GET'])
+def countries():
+    '''
+    Get the countries list and its coordinates for the list on map page.
+    '''
+    try:
+        fp = open('public/countries.csv', 'r')
+        reader = csv.reader(fp)
+        data = {'countries': []}
+
+        for row in reader:
+            data['countries'].append({
+                'name': row[3],
+                'lat': row[1],
+                'lon': row[2]
+            })
+
+        fp.close()
+
+        return Response(json.dumps(data), headers={'Content-type': 'application/json'}, status=200)
+    except FileNotFoundError:
+        return Response(json.dumps({'msg': 'The countries file is missing!'}), headers={'Content-type': 'application/json'}, status=404)

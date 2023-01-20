@@ -22,6 +22,9 @@
         <div class="mapform_inner">
           <button type="button" onclick="clearlastmarker();">Clear last marker</button>
           <button type="button" class="button_red" onclick="clearmap();">Clear map</button>
+          <select id="select_country" onchange="changeCountry();">
+            <option>-- Find country --</option>
+          </select>
         </div>
 
         <div class="mapform mapform_inner">
@@ -140,7 +143,7 @@
   <script>
     const center_lat = parseFloat(document.getElementById('center_lat').value);
     const center_lon = parseFloat(document.getElementById('center_lon').value);
-    const map = L.map('map').setView([center_lat, center_lon], 13);
+    const map = L.map('map').setView([center_lat, center_lon], 6);
     const markers = [];
     const polpoints = [];
     
@@ -200,7 +203,7 @@
      *  Whenever a user clicks on the map, the app should add the corresponding
      *  coordiniates to create a list of points that will generate a polygon
      *  for AoI selection.
-    */
+     */
     function onMapClick(e) {
       // If the polygon is already closed, we don't allow more points
       if (closed == true) {
@@ -238,7 +241,50 @@
         });
       }
     }
+
+    /**
+     *  Countries list.
+     *  
+     *  Populate the countries list from countries.csv.
+     */
+    function countriesPopulate() {
+      fetch('/map/countries')
+        .then((res) => {
+          return res.json();
+        })
+        .then((json) => {
+          let select = document.getElementById('select_country');
+          json['countries'].forEach((value, index, array) => {
+            let op = document.createElement("option");
+            if (value['name'].length > 20) {
+              op.text = value['name'].substring(0, 20) + '...';
+            } else {
+              op.text = value['name'];
+            }
+            op.value = value['lat'] + ',' + value['lon'];
+            select.options.add(op);
+          });
+        })
+        .catch((err) => {
+          console.log('Error!');
+        });
+    }
+
+    /**
+     *  Change the map position to the selected country.
+     */
+    function changeCountry() {
+      try {
+        const select = document.getElementById('select_country');
+        const country = select.selectedOptions[0];
+        const [lat, lon] = country['value'].split(',');
+        map.setView([parseFloat(lat), parseFloat(lon)]);
+      } catch (error) {
+        console.log('No country selected.');
+      }
+    }
   
     map.on('click', onMapClick);
+    countriesPopulate();
   </script>
 {% endblock %}
