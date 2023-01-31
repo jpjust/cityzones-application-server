@@ -12,7 +12,7 @@ from . import models, api, map, about, help
 
 def create_app(test_config=None):
     '''
-    Create the RiskZones Web Flask App.
+    Create the CityZones Web Flask App.
     '''
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(

@@ -1,6 +1,6 @@
-# RiskZones Web
+# CityZones Web
 
-RiskZones Web is a web interface for riskzones Python script.
+CityZones Web is a web interface for riskzones Python script.
 
 ## How to deploy
 
@@ -22,4 +22,4 @@ Copy `.env.example` file and set the configuration for your server.
 
 `cp .env.example .env`
 
-To run RiskZones Web you will need Passenger WSGI enabled in your server. Follow your HTTP daemon instructions to setup Passenger and finish the deployment.
+To run CityZones Web you will need Passenger WSGI enabled in your server. Follow your HTTP daemon instructions to setup Passenger and finish the deployment.
