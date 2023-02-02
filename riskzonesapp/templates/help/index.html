@@ -47,11 +47,27 @@
 
   <p>
     After finishing performing a task, the worker sends its result to the web application and the tasks enters the
-    &quot;<span class="status_done">Done</span>&quot; stage. The &quot;Show map&quot; button will be displayed.
-    at the right of the list. Click it to see the results of the classification on the map. Also there will be a
-    CSV file icon that can be used to download a ZIP file with the CSV data of the classification that can be used
-    in Google Earth Engine. Use the <a href="https://github.com/jpjust/riskzones/blob/main/gee_riskzones.js" target="_blank">
-    example script</a> in the project's GitHub repository.
+    &quot;<span class="status_done">Done</span>&quot; stage. The &quot;Show map&quot; button will be displayed at
+    the right of the list. Click it to see the results of the classification on the map. If the results are too
+    large, a ⚠️ icon will be shown on the button to alert you. The others icons displayed at the right are described
+    below:
+  </p>
+
+  <p>
+    <i class="fa-solid fa-cloud-arrow-down fa-xl"></i>: Download a ZIP file containing the CSV data of the classification
+    that can be used in Google Earth Engine. Use the
+    <a href="https://github.com/jpjust/riskzones/blob/main/gee_riskzones.js" target="_blank">example script</a>
+    in the project's GitHub repository.
+  </p>
+
+  <p>
+    <i class="fa-solid fa-file fa-xl"></i>: Download a ZIP file containing the configuration JSON and the AoI GeoJSON
+    to be used with RiskZones tool. Use these files if you want to run the classification tool locally on your computer.
+  </p>
+
+  <p>
+    <i class="fa-solid fa-map fa-xl"></i>: Re-opens the Map view with the AoI used for this task. This feature allows
+    you to recreate a task with other options.
   </p>
 
   <p>
