@@ -118,6 +118,7 @@ def get_result(id):
         map_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_map.csv'
         edus_file = f'{os.getenv("RESULTS_DIR")}/{result.task.base_filename}_edus.csv'
         classification = {
+            'polygon': [],
             'center_lat': 0,
             'center_lon': 0,
             'zl': result.task.config['zone_size'],
@@ -134,6 +135,8 @@ def get_result(id):
 
         try:
             # Classification data
+            classification['polygon'] = result.task.geojson['features'][0]['geometry']['coordinates'][0][0]
+
             fp = open(map_file, 'r')
             reader = csv.reader(fp)
             fp.readline()  # Skip header line

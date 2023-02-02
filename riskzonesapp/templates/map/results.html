@@ -176,7 +176,14 @@
           });
 
           if (!chk_norecenter.checked) {
-            map.setView([json['center_lat'], json['center_lon']], 10);
+            const polpoints = [];
+            json['polygon'].forEach((value, index, array) => {
+              polpoints.push({
+                'lat': value[1],
+                'lon': value[0]
+              });
+            });
+            map.fitBounds(L.polygon([...polpoints]).getBounds());
           }
 
           button.innerHTML = 'Show map';
