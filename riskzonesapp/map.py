@@ -28,7 +28,7 @@ def show_polygon(polygon: str):
 
     Shows the map with some AoI defined.
     '''
-    return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT, polygon=eval(polygon))
+    return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT, polygon=eval(polygon.replace('%20', '')))
 
 @bp.route('/run', methods=['POST'])
 def run():
