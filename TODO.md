@@ -20,6 +20,10 @@ Add a button to the results list so that an user can open the map view with that
 
 Test what happens if the user input a text where a number is expected, for example.
 
+# Admin view
+
+Implement an admin view to manage workers with different API keys.
+
 # Other functionalities
 
 - More PoIs categories
