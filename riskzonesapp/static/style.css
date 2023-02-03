@@ -103,7 +103,7 @@ body {
 
 .mapform {
   overflow-y: scroll;
-  height: 65vh;
+  height: 50vh;
 }
 
 .mapform_inner {

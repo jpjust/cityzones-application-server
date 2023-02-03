@@ -7,39 +7,35 @@ riskzones background app.
 
 from datetime import datetime
 import os
+import geojson
 
 def make_polygon(polygon: list) -> dict:
     '''
     Generate a GeoJSON structure for the polygon.
     '''
-    pol_dict = {
-        "type": "FeatureCollection",
-        "name": "meta",
-        "crs": {
-            "type": "name",
-            "properties": {
-                "name": "urn:ogc:def:crs:EPSG::4674"
-            }
-        },
-        "features": [
-            {
-                "type": "Feature",
-                "geometry": {
-                    "type": "MultiPolygon",
-                    "coordinates": [[[]]]
-                }
-            }
-        ]
-    }
-
-    # Add each point to the GeoJSON structure
-    for point in polygon:
-        pol_dict['features'][0]['geometry']['coordinates'][0][0].append(point)
+    geojson_polygon = geojson.Polygon([polygon, polygon[0]])  # The first point must be repeated at the end to close the polygon
+    geojson_feature = geojson.Feature(geometry=geojson_polygon)
+    geojson_collection = geojson.FeatureCollection([geojson_feature])
     
-    # The first point must be repeated at the end to close the polygon
-    pol_dict['features'][0]['geometry']['coordinates'][0][0].append(polygon[0])
+    return geojson_collection
 
-    return pol_dict
+def get_polygon(collection: dict) -> list:
+    '''
+    Get the polygon from a GeoJSON FeatureCollection.
+    '''
+    geojson_collection = geojson.loads(str(collection).replace("'", '"'))
+    polygon = []
+
+    try:
+        if geojson_collection.type == 'FeatureCollection':
+            if geojson_collection.features[0].geometry.type == 'Polygon':
+                polygon = geojson_collection.features[0].geometry.coordinates[0]
+            elif geojson_collection.features[0].geometry.type == 'MultiPolygon':
+                polygon = geojson_collection.features[0].geometry.coordinates[0][0]
+    except AttributeError:
+        pass
+    
+    return polygon
 
 def make_config_file(polygon: list, zl: int, edus: int, edu_alg: str) -> tuple:
     '''

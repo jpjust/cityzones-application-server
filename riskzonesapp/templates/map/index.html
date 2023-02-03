@@ -14,6 +14,16 @@
     <div id="map"></div>
   
     <div class="maptools">
+      <form action="{{ url_for('map.geojson_map') }}" method="POST" enctype="multipart/form-data">
+        <p style="text-align: center;"><strong>Select AoI from GeoJSON</strong></p>
+        <div class="mapform_inner">
+          <input type="file" name="geojson">
+          <button type="submit">Send GeoJSON</button>
+        </div>
+      </form>
+
+      <p style="text-align: center;"><strong>AoI marking</strong></p>
+
       <form action="{{ url_for('map.run') }}" method="POST">
         <input type="hidden" id="polygon" name="polygon" value="{{ polygon }}">
         <input type="hidden" id="center_lat" value="{{ lat }}">
@@ -27,9 +37,9 @@
           </select>
         </div>
 
-        <div class="mapform mapform_inner">
-          <p style="text-align: center;"><strong>Settings</strong></p>
+        <p style="text-align: center;"><strong>Settings</strong></p>
 
+        <div class="mapform mapform_inner">
           <div class="mapform_inner_horizontal">
             <label for="zl">Zone lenght (zl):</label>
             <input type="text" id="zl" name="zl" size="5" value="30" required>

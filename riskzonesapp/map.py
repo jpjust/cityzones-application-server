@@ -4,6 +4,7 @@ import os
 import io
 import csv
 import json
+import geojson
 from zipfile import ZipFile, ZIP_DEFLATED
 
 bp = Blueprint('map', __name__, url_prefix='/map')
@@ -29,6 +30,22 @@ def show_polygon(polygon: str):
     Shows the map with some AoI defined.
     '''
     return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT, polygon=eval(polygon.replace('%20', '')))
+
+@bp.route('/geojson', methods=['POST'])
+def geojson_map():
+    '''
+    Map index page.
+
+    Shows the map with an AoI defined by a GeoJSON file.
+    '''
+    geojson_file = request.files['geojson']
+    geojson_data = geojson.loads(geojson_file.read().decode())
+    polygon = meta.get_polygon(geojson_data)
+
+    if polygon == None:
+        return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT, polygon=[], error_msg='Invalid GeoJSON file. It must be a FeatureCollection with a Polygon or MultiPolygon feature.')
+    else:
+        return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT, polygon=polygon)
 
 @bp.route('/run', methods=['POST'])
 def run():
@@ -67,7 +84,7 @@ def run():
                 return render_template('map/index.html', error_msg='The selected AoI is invalid.', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT)
 
         # Generate configuration files
-        geojson = meta.make_polygon(polygon)
+        geojson_data = meta.make_polygon(polygon)
         base_filename, conf = meta.make_config_file(polygon, zl, edus, edu_alg)
         center_lon = (conf['left'] + conf['right']) /2
         center_lat = (conf['bottom'] + conf['top']) /2
@@ -79,7 +96,7 @@ def run():
 
         # Store in database        
         with current_app.app_context():
-            task = models.Task(base_filename, conf, geojson, center_lat, center_lon)
+            task = models.Task(base_filename, conf, geojson_data, center_lat, center_lon)
             task.description = description
             models.db.session.add(task)
             models.db.session.commit()
@@ -102,7 +119,7 @@ def results():
     '''
     with current_app.app_context():
         tasks = db.paginate(db.select(models.Task).order_by(models.Task.created_at.desc()), max_per_page=10)
-        return render_template('map/results.html', tasks=tasks)
+        return render_template('map/results.html', tasks=tasks, meta=meta)
 
 @bp.route('/result/<int:id>', methods=['GET'])
 def get_result(id):
