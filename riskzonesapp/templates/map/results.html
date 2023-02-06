@@ -146,6 +146,7 @@
     let slider = document.getElementById('opacity_range');
     let slider_value = document.getElementById('opacity_value');
     const circles = [];
+    const edus = [];
 
     /**
      * Opacity slider events.
@@ -196,6 +197,11 @@
             map.removeLayer(circle);
           }
 
+          while (edus.length > 0) {
+            edu = edus.pop();
+            map.removeLayer(edu);
+          }
+
           // Add zones
           let r = json['zl'] / 2;
           json['1'].forEach((value, index, array) => {
@@ -213,8 +219,8 @@
 
           // Add EDUs
           json['edus'].forEach((value, index, array) => {
-            let circle = L.circle([value[1], value[0]], {radius: 10, color: '#000000', stroke: false, fillOpacity: 1}).addTo(map);
-            circles.push(circle);
+            let edu = L.circle([value[1], value[0]], {radius: 10, color: '#000000', stroke: false, fillOpacity: 1}).addTo(map);
+            edus.push(edu);
           });
 
           if (!chk_norecenter.checked) {
