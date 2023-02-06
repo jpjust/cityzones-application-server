@@ -123,6 +123,12 @@
         <button onclick="map_to_image();">Download map image</button>
       </div>
 
+      <div class="slidecontainer">
+        <span id="opacity_label">Classification layer opacity:</span>
+        <input type="range" min="1" max="100" value="50" class="slider" id="opacity_range">
+        <span id="opacity_value">50 %</span>
+      </div>
+
       <div>
         {{ render_pagination(tasks, 'map.results') }}
       </div>
@@ -136,8 +142,26 @@
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | <a href="https://riskzonesweb.just.pro.br">CityZones</a>'
     }).addTo(map);
     let marker = null;
+    let opacity = 0.5;
+    let slider = document.getElementById('opacity_range');
+    let slider_value = document.getElementById('opacity_value');
     const circles = [];
 
+    /**
+     * Opacity slider events.
+     *
+     * Change opacity value and updates map layer on mouse out.
+     */
+    slider.oninput = function() {
+      opacity = slider.value / 100;
+      slider_value.innerHTML = slider.value + ' %';
+    }
+
+    slider.onchange = function() {
+      circles.forEach((value, index, array) => value.setStyle({fillOpacity: opacity}));
+    }
+
+    // Marker functions
     function clear_marker() {
       if (marker) map.removeLayer(marker);
     }
@@ -147,6 +171,11 @@
       marker = L.marker([lat, lon]).addTo(map);
     }
 
+    /**
+     * Get data funtcion.
+     *
+     * Gets classification data from web service and display classified zones on map.
+     */
     function get_data(id) {
       let chk_norecenter = document.getElementById('chk_norecenter');
       let button = document.getElementById('btn_' + id);
@@ -170,15 +199,15 @@
           // Add zones
           let r = json['zl'] / 2;
           json['1'].forEach((value, index, array) => {
-            let circle = L.circle([value[1], value[0]], {radius: r, color: '#00ff00', stroke: false, fillOpacity: 0.5}).addTo(map);
+            let circle = L.circle([value[1], value[0]], {radius: r, color: '#00ff00', stroke: false, fillOpacity: opacity}).addTo(map);
             circles.push(circle);
           });
           json['2'].forEach((value, index, array) => {
-            let circle = L.circle([value[1], value[0]], {radius: r, color: '#ffff00', stroke: false, fillOpacity: 0.5}).addTo(map);
+            let circle = L.circle([value[1], value[0]], {radius: r, color: '#ffff00', stroke: false, fillOpacity: opacity}).addTo(map);
             circles.push(circle);
           });
           json['3'].forEach((value, index, array) => {
-            let circle = L.circle([value[1], value[0]], {radius: r, color: '#ff0000', stroke: false, fillOpacity: 0.5}).addTo(map);
+            let circle = L.circle([value[1], value[0]], {radius: r, color: '#ff0000', stroke: false, fillOpacity: opacity}).addTo(map);
             circles.push(circle);
           });
 
@@ -207,6 +236,9 @@
         });
     }
 
+    /**
+     * Download map image.
+     */
     function map_to_image() {
       let map_dom = document.getElementById('map');
       domtoimage.toBlob(map_dom, {height: map_dom.clientHeight, width: map_dom.clientWidth})

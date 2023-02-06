@@ -118,6 +118,13 @@ body {
   margin-bottom: 5px;
 }
 
+.slidecontainer {
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+  margin-bottom: 5px;
+}
+
 button {
   color: green;
   background: rgb(200, 255, 200);
