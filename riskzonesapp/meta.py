@@ -13,7 +13,8 @@ def make_polygon(polygon: list) -> dict:
     '''
     Generate a GeoJSON structure for the polygon.
     '''
-    geojson_polygon = geojson.Polygon([polygon, polygon[0]])  # The first point must be repeated at the end to close the polygon
+    polygon.append(polygon[0])
+    geojson_polygon = geojson.Polygon([polygon])
     geojson_feature = geojson.Feature(geometry=geojson_polygon)
     geojson_collection = geojson.FeatureCollection([geojson_feature])
     

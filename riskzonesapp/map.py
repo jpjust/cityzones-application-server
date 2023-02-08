@@ -152,7 +152,12 @@ def get_result(id):
 
         try:
             # Classification data
-            classification['polygon'] = result.task.geojson['features'][0]['geometry']['coordinates'][0][0]
+            geojson_collection = geojson.loads(str(result.task.geojson).replace("'", '"'))
+            geojson_geometry = geojson_collection.features[0].geometry
+            if geojson_geometry.type == 'Polygon':
+                classification['polygon'] = geojson_geometry.coordinates[0]
+            elif geojson_geometry.type == 'MultiPolygon':
+                classification['polygon'] = geojson_geometry.coordinates[0][0]
 
             fp = open(map_file, 'r')
             reader = csv.reader(fp)
