@@ -41,7 +41,7 @@
 
   <p>
     The list shows also the timestamp of the task (i.e, when it was created). After the request, the task will be
-    in the &quot;<span class="status_queue">On queue</span>&quot; stage. This mean that your task is in our database
+    in the &quot;<span class="status_queue">Queued</span>&quot; stage. This mean that your task is in our database
     waiting for a worker to get it.
   </p>
 
@@ -78,7 +78,7 @@
   <p>
     Sometimes something wrong may happen on the worker computer and the task does not get finished. {{ task_req_exp }}
     minutes after a worker gets a task, if the results are not received by the web application, the tasks enters the
-    &quot;<span class="status_expired">Process expired</span>&quot; state. This does not mean your task will not be done.
+    &quot;<span class="status_expired">Expired</span>&quot; state. This does not mean your task will not be done.
     It gets back on queue, so another worker can get it and finish. This can also happen if your AoI is too big and
     the worker takes more than an hour to complete it. Even if your task gets into the expired state, if the worker
     returns the result it will be received by the web application and displayed on the page.
@@ -87,7 +87,7 @@
   <p>
     However, any task may fail. A failure usually occurs if there are no PoIs inside your AoI. In this case, the worker will
     not be able to return a result. If a task is requested {{ task_req_max }} times and gets no result after the expiration period, it is
-    considered as a failed task and it will enter the &quot;<span class="status_failed">Processing failed</span>&quot; state.
+    considered as a failed task and it will enter the &quot;<span class="status_failed">Failed</span>&quot; state.
     In this state the task will not be given to a worker anymore.
   </p>
 {% endblock %}

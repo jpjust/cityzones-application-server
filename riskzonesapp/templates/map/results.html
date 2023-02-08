@@ -58,13 +58,13 @@
                   {% if task.result %}
                     <span class="status_done">Done</span>
                   {% elif task.failed() %}
-                    <span class="status_failed">Processing failed</span>  
+                    <span class="status_failed">Failed</span>  
                   {% elif task.expired() %}
-                    <span class="status_expired">Processing expired, back on queue</span>
+                    <span class="status_expired">Expired, back on queue</span>
                   {% elif task.requested_at %}
                     <span class="status_processing">Processing...</span>
                   {% else %}
-                    <span class="status_queue">On queue</span>
+                    <span class="status_queue">Queued</span>
                   {% endif %}
                 </td>
                 <td class="result_cell" align="right">
