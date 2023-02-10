@@ -29,7 +29,11 @@ def show_polygon(polygon: str):
 
     Shows the map with some AoI defined.
     '''
-    return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT, polygon=eval(polygon.replace('%20', '')))
+    polygon = eval(polygon.replace('%20', ''))
+    if polygon[-1][0] == polygon[0][0] and polygon[-1][1] == polygon[0][1]:
+        polygon.pop()
+    
+    return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT, polygon=polygon)
 
 @bp.route('/geojson', methods=['POST'])
 def geojson_map():
@@ -45,6 +49,9 @@ def geojson_map():
     if polygon == None:
         return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT, polygon=[], error_msg='Invalid GeoJSON file. It must be a FeatureCollection with a Polygon or MultiPolygon feature.')
     else:
+        if polygon[-1][0] == polygon[0][0] and polygon[-1][1] == polygon[0][1]:
+            polygon.pop()
+        
         return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT, polygon=polygon)
 
 @bp.route('/run', methods=['POST'])
