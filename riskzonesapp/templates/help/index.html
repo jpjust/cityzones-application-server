@@ -27,8 +27,7 @@
   </p>
 
   <p>
-    Finally, there is the &quot;Request map&quot; option. The web interface will save the request in the proper database so a worker
-    computer (Map-services device) can get it and perform the classification. The page will reload and show a message on top indicating
+    Finally, there is the &quot;Request map&quot; option. The web interface will save the request in the proper database so a Maps-services device can get it (through its Worker module) and perform the risks classification. The page will reload and show a message on top indicating
     that the request has been successfully submited with an identification number. Keep it!
   </p>
 
@@ -79,8 +78,8 @@
     Sometimes something wrong may happen on a Maps-service device and the task does not get finished. {{ task_req_exp }}
     minutes after a worker gets a task. If the results are not received by the web application, the tasks enters the
     &quot;<span class="status_expired">Expired</span>&quot; state. This does not mean that a requested task will not be computed.
-    Actually, the task returns to the queue, so another worker can get it and finish. This can also happen if your AoI is too big and
-    the worker takes more than an hour to complete it. Even if a task gets into the expired state, if the worker
+    Actually, the task returns to the queue, so another Maps-service device can get it and finish. This can also happen if an AoI is too big and
+    the worker takes more than an hour to serve it. Even if a task gets into the expired state, if the worker
     returns the result it will be received by the web application and displayed on the page.
   </p>
 
