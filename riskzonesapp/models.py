@@ -3,6 +3,7 @@ import sqlalchemy
 from sqlalchemy.orm import relationship
 from datetime import datetime, timedelta
 import os
+import secrets
 
 db = SQLAlchemy()
 
@@ -20,8 +21,8 @@ class Task(db.Model):
     lat = db.Column(db.Float, nullable=False)
     lon = db.Column(db.Float, nullable=False)
     requested_at = db.Column(db.DateTime(timezone=True), nullable=True)
-    description = db.Column(db.String(100), nullable=True)
-    requests = db.Column(db.Integer, nullable=False, default=0)
+    description = db.Column(db.String(100))
+    requests = db.Column(db.Integer(), nullable=False, default=0)
 
     result = relationship("Result", back_populates="task")
 
@@ -67,7 +68,7 @@ class Result(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime(timezone=True), nullable=False)
     task_id = db.Column(db.Integer, sqlalchemy.ForeignKey(Task.id))
-    res_data = db.Column(db.JSON())
+    res_data = db.Column(db.JSON)
 
     task = relationship("Task", back_populates="result")
 
@@ -80,3 +81,23 @@ class Result(db.Model):
             return 0
         
         return self.res_data.get(key)
+
+class Worker(db.Model):
+    '''
+    Model for workers table.
+    '''
+    __tablename__ = 'workers'
+
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(64), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Unicode(200))
+    created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
+    tasks = db.Column(db.Integer, server_default='0')
+    last_task_at = db.Column(db.DateTime)
+    total_time = db.Column(db.Float, server_default='0.0')
+
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+        self.token = secrets.token_hex(32)
