@@ -1,6 +1,8 @@
-# CityZones Web
+# CityZones Application Server
 
-CityZones Web is a web interface for riskzones Python script.
+CityZones Application Server is a web interface and back-end application for CityZones Maps-service: https://github.com/jpjust/cityzones-maps-service
+
+The web interface works as a client for the user, so the user can configure an AoI to reqeuest a RiskZones classification. The Maps-service workers will periodically request a task from the CityZones Application Server to perform it locally and then send the results back. The web interface can then present the results to the user.
 
 ## How to deploy
 

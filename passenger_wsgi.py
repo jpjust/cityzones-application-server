@@ -12,5 +12,5 @@ if sys.executable != INTERP:
 sys.path.insert(0, "%s/venv/bin" % cwd)
 
 # Import the application
-import riskzonesapp
-application = riskzonesapp.create_app()
+import cityzonesapp
+application = cityzonesapp.create_app()
