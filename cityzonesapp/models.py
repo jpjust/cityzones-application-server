@@ -1,11 +1,16 @@
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 from sqlalchemy.orm import relationship
 from datetime import datetime, timedelta
+from passlib.hash import sha256_crypt
 import os
 import secrets
 
 db = SQLAlchemy()
+
+class PasswordsDontMatchException(Exception):
+    pass
 
 class Task(db.Model):
     '''
@@ -15,7 +20,7 @@ class Task(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime(timezone=True), nullable=False)
-    base_filename = db.Column(db.String(length=64), nullable=False)
+    base_filename = db.Column(db.String(length=64), unique=True, nullable=False)
     config = db.Column(db.JSON, nullable=False)
     geojson = db.Column(db.JSON, nullable=False)
     lat = db.Column(db.Float, nullable=False)
@@ -89,7 +94,7 @@ class Worker(db.Model):
     __tablename__ = 'workers'
 
     id = db.Column(db.Integer, primary_key=True)
-    token = db.Column(db.String(64), nullable=False)
+    token = db.Column(db.String(64), unique=True, nullable=False)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Unicode(200))
     created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
@@ -101,3 +106,25 @@ class Worker(db.Model):
         self.name = name
         self.description = description
         self.token = secrets.token_hex(32)
+
+class User(UserMixin, db.Model):
+    '''
+    Model for users table.
+    '''
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True, nullable=False)    
+    password = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    company = db.Column(db.String(100), nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
+
+    def __init__(self, email, password, password_confirmation, name, company=None):
+        if password != password_confirmation:
+            raise PasswordsDontMatchException
+        
+        self.email = email
+        self.password = sha256_crypt.encrypt(password)
+        self.name = name
+        self.company = company

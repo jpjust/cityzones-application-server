@@ -118,6 +118,12 @@ body {
   margin-bottom: 5px;
 }
 
+.form_field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
 .slidecontainer {
   display: flex;
   align-items: center;
@@ -190,4 +196,25 @@ input {
 
 .fa-icon a {
   color: darkslategray;
+}
+
+table {
+  border: 1px solid;
+  border-collapse: collapse;
+}
+
+tr, th, td {
+  border: 1px solid;
+}
+
+tr:hover {
+  background-color: lightblue;
+}
+
+th, td {
+  padding: 5px;
+}
+
+thead {
+  background-color: rgb(200, 255, 200);
 }

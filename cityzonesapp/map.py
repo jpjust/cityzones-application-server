@@ -1,4 +1,5 @@
 from flask import Blueprint, Response, current_app, render_template, request, send_file
+from flask_login import login_required, current_user
 from . import meta, models
 import os
 import io
@@ -14,6 +15,7 @@ DEFAULT_MAP_LON = -8.595449606742658
 DEFAULT_MAP_LAT = 41.1783048033954
 
 @bp.route('/show', methods=['GET'])
+@login_required
 def show():
     '''
     Map index page.
@@ -23,6 +25,7 @@ def show():
     return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT, polygon=[])
 
 @bp.route('/show/<polygon>', methods=['GET'])
+@login_required
 def show_polygon(polygon: str):
     '''
     Map index page.
@@ -36,6 +39,7 @@ def show_polygon(polygon: str):
     return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT, polygon=polygon)
 
 @bp.route('/geojson', methods=['POST'])
+@login_required
 def geojson_map():
     '''
     Map index page.
@@ -55,6 +59,7 @@ def geojson_map():
         return render_template('map/index.html', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT, polygon=polygon)
 
 @bp.route('/run', methods=['POST'])
+@login_required
 def run():
     '''
     Map request method.
@@ -118,6 +123,7 @@ def run():
         return render_template('map/index.html', error_msg='There was an error trying to parse some parameters. Check if you entered proper values.', lon=DEFAULT_MAP_LON, lat=DEFAULT_MAP_LAT)
 
 @bp.route('/results', methods=['GET'])
+@login_required
 def results():
     '''
     Results index page.
@@ -129,6 +135,7 @@ def results():
         return render_template('map/results.html', tasks=tasks, meta=meta)
 
 @bp.route('/result/<int:id>', methods=['GET'])
+@login_required
 def get_result(id):
     '''
     Get a result by its ID and respond with its map data.
@@ -202,6 +209,7 @@ def get_result(id):
             return Response(json.dumps({'msg': 'Results file not found for this task.'}), headers={'Content-type': 'application/json'}, status=500)
 
 @bp.route('/result/download/<int:id>', methods=['GET'])
+@login_required
 def download_result(id):
     '''
     Get a result by its ID and respond with its CSV files in ZIP format.
@@ -236,6 +244,7 @@ def download_result(id):
         )
 
 @bp.route('/download/<int:id>', methods=['GET'])
+@login_required
 def download_task(id):
     '''
     Get a task by its ID and respond with its JSON and GeoJSON files in ZIP format.
@@ -258,6 +267,7 @@ def download_task(id):
         )
 
 @bp.route('/countries', methods=['GET'])
+@login_required
 def countries():
     '''
     Get the countries list and its coordinates for the list on map page.

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block htmlhead %}
+{% endblock %}
+
+{% block header %}
+  {% block title %}Sign up{% endblock %}
+{% endblock %}
+
+{% block content %}
+  <h2>{{ title }}</h2>
+
+  <form action="{{ url_for('auth.signup') }}" method="POST">
+    <div class="form_field">
+      * Required fields.
+    </div>
+    <div class="form_field">
+      <label for="worker_name">E-mail*:</label>
+      <input type="text" name="email" value="{{ form['email'] }}" required>
+    </div>
+    <div class="form_field">
+      <label for="worker_name">Name*:</label>
+      <input type="text" name="name" value="{{ form['name'] }}" required>
+    </div>
+    <div class="form_field">
+      <label for="worker_name">Filiation/company:</label>
+      <input type="text" name="company" value="{{ form['company'] }}">
+    </div>
+    <div class="form_field">
+      <label for="worker_name">Password*:</label>
+      <input type="password" name="password1" value="{{ form['password1'] }}" required>
+    </div>
+    <div class="form_field">
+      <label for="worker_name">Password confirmation*:</label>
+      <input type="password" name="password2" value="{{ form['password2'] }}" required>
+    </div>
+    <div class="form_buttons">
+      <button type="submit">Register</button>
+    </div>
+  </form>
+{% endblock %}

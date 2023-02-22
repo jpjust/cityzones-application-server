@@ -18,7 +18,7 @@ Then activate the virtual environment.
 
 Install the dependencies.
 
-`python3 -m pip install flask flask-sqlalchemy flask-mysqldb python-dotenv flask-alembic geojson`
+`python3 -m pip install flask flask-sqlalchemy flask-mysqldb python-dotenv flask-alembic geojson passlib flask-login`
 
 Copy `.env.example` file and set the configuration for your server.
 

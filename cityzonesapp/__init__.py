@@ -27,7 +27,8 @@ import os
 
 from flask import Flask
 from flask_alembic import Alembic
-from . import models, api, map, about, help
+from flask_login import LoginManager
+from . import models, auth, api, map, about, help
 
 def create_app(test_config=None):
     '''
@@ -42,21 +43,33 @@ def create_app(test_config=None):
     alembic = Alembic()
     alembic.init_app(app)
 
+    # Auth
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        # since the user_id is just the primary key of our user table, use it in the query for the user
+        return models.User.query.get(int(user_id))
+
     # Create database tables
     with app.app_context():
         models.db.create_all()
 
     # Create results directories
     try:
-        os.makedirs(os.getenv('RESULTS_DIR'))
+        os.makedirs(str(os.getenv('RESULTS_DIR')))
     except FileExistsError:
         pass
 
     # Blueprints
+    app.register_blueprint(auth.bp)
     app.register_blueprint(api.bp)
     app.register_blueprint(map.bp)
     app.register_blueprint(about.bp)
     app.register_blueprint(help.bp)
+    #app.register_blueprint(worker.bp)
 
     app.config.from_pyfile('config.py', silent=True)
 
