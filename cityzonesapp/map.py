@@ -1,6 +1,5 @@
 from flask import Blueprint, Response, current_app, render_template, request, send_file
 from flask_login import login_required, current_user
-from sqlalchemy import and_
 from . import meta, models
 import os
 import io

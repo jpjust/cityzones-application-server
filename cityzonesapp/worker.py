@@ -18,7 +18,7 @@ def list(info_msg=None, error_msg=None):
 
     Shows the workers and buttons to handle them.
     '''
-    return render_template('worker/index.html', workers=db.session.query(models.Worker).all(), info_msg=info_msg, error_msg=error_msg)
+    return render_template('worker/index.html', workers=models.Worker.query.all(), info_msg=info_msg, error_msg=error_msg)
 
 @bp.route('/add', methods=['GET', 'POST'])
 @login_required
@@ -45,7 +45,7 @@ def edit(id):
 
     Shows a form to edit a worker.
     '''
-    worker = models.db.session.query(models.Worker).where(models.Worker.id == id).first()
+    worker = models.Worker.query.get(id)
     if worker == None:
         return list(error_msg='Worker does not exist.')
 
@@ -65,7 +65,7 @@ def delete(id):
     '''
     Deletes a worker from the database.
     '''
-    worker = models.db.session.query(models.Worker).where(models.Worker.id == id).first()
+    worker = models.Worker.query.get(id)
     if worker == None:
         return list(error_msg='Worker does not exist.')
 
