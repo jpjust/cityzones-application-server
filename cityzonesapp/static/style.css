@@ -118,10 +118,28 @@ body {
   margin-bottom: 5px;
 }
 
+.center_area {
+  display: flex;
+  justify-content: center;
+}
+
+.form_area {
+  width: 25%;
+}
+
+.listing_area {
+  width: 50%;
+}
+
 .form_field {
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
+}
+
+.form_buttons {
+  display: flex;
+  justify-content: space-between;
 }
 
 .slidecontainer {
@@ -132,17 +150,40 @@ body {
 }
 
 button {
-  color: green;
-  background: rgb(200, 255, 200);
-  border: 1px green solid;
+  text-decoration: none;
+  color: black;
+  background: rgb(235, 235, 235);;
+  border: 1px black solid;
   padding: 5px 10px;
   margin: 5px;
 }
 
-.button_red {
+button:hover {
+  background: rgb(245, 245, 245);
+}
+
+.button_alert {
   color: red;
   background: rgb(255, 200, 200);
   border: 1px red solid;
+}
+
+.button_alert:hover {
+  background: rgb(255, 235, 235);
+}
+
+.button_default {
+  color: blue;
+  background: rgb(200, 225, 255);
+  border: 1px blue solid;
+}
+
+.button_default:hover {
+  background: rgb(225, 235, 255);
+}
+
+label {
+  margin-left: 5px;
 }
 
 input {
@@ -153,6 +194,7 @@ input {
 table {
   border: 1px solid;
   border-collapse: collapse;
+  font-size: small;
 }
 
 tr, th, td {
@@ -187,20 +229,11 @@ thead {
   height: calc(75vh);
 }
 
-.results_table table, tr, th, td {
+.results_table table,
+.results_table tr,
+.results_table th,
+.results_table td {
   border: none;
-}
-
-.results_table table {
-  border: none;
-}
-
-.result_item:hover {
-  background-color: lightblue;
-}
-
-.result_cell {
-  border-top: 1pt black solid;
 }
 
 .status_queue {

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block htmlhead %}
+{% endblock %}
+
+{% block header %}
+  {% block title %}Workers{% endblock %}
+{% endblock %}
+
+{% block content %}
+  <div class="center_area">
+    <div class="form_area">
+      <h2>Add worker</h2>
+
+      {% if worker %}
+        <form action="{{ url_for(request.endpoint, id=worker.id) }}" method="POST">
+      {% else %}
+        <form action="{{ url_for(request.endpoint) }}" method="POST">
+      {% endif %}
+      
+        <div class="form_field">
+          <label for="worker_name">Name:</label>
+          <input type="text" id="worker_name" name="name" value="{% if worker %}{{ worker.name }}{% endif %}">
+        </div>
+        <div class="form_field">
+          <label for="worker_name">Description:</label>
+          <input type="text" id="worker_description" name="description" value="{% if worker %}{{ worker.description }}{% endif %}">
+        </div>
+        <div class="form_buttons">
+          <a href="{{ url_for('worker.list') }}"><button type="button">Return to list</button></a>
+          <button class="button_default" type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -28,7 +28,7 @@ import os
 from flask import Flask
 from flask_alembic import Alembic
 from flask_login import LoginManager
-from . import models, auth, api, map, about, help
+from . import models, auth, api, map, worker, about, help
 
 def create_app(test_config=None):
     '''
@@ -69,7 +69,7 @@ def create_app(test_config=None):
     app.register_blueprint(map.bp)
     app.register_blueprint(about.bp)
     app.register_blueprint(help.bp)
-    #app.register_blueprint(worker.bp)
+    app.register_blueprint(worker.bp)
 
     app.config.from_pyfile('config.py', silent=True)
 

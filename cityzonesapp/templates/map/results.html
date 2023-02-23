@@ -41,7 +41,7 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Created at</th>
+              <th>Submitted at</th>
               <th>Started at</th>
               <th>Status</th>
               <th></th>
@@ -50,7 +50,7 @@
 
           <tbody>
             {% for task in tasks %}
-              <tr class="result_item" onmouseover="show_marker({{ task.lat }}, {{ task.lon }});" onmouseout="clear_marker();">
+              <tr class="result_item" style="border-top: 1px solid;" onmouseover="show_marker({{ task.lat }}, {{ task.lon }});" onmouseout="clear_marker();">
                 <td class="result_cell">{{ task.id }}</td>
                 <td class="result_cell">{{ task.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
                 <td class="result_cell">{% if task.requested_at %}{{ task.requested_at.strftime('%d/%m/%Y %H:%M') }}{% endif %}</td>
@@ -67,7 +67,7 @@
                     <span class="status_queue">Queued</span>
                   {% endif %}
                 </td>
-                <td class="result_cell" align="right">
+                <td class="result_cell" style="text-align: right">
                   {% if task.result %}
                     {% if task.result[0].get_data('n_zones') >= 1000000 %}
                       {% set button_text = 'Show map ⚠️' %}

@@ -5,18 +5,24 @@
 {% endblock %}
 
 {% block content %}
-  <h2>Requesting an AoI classification</h2>
+  <h2>Submitting an AoI classification task</h2>
 
   <p>
-    This web application is intended to provide an easy interface to request map processing tasks to the RiskZones algorithms module (version 2.0), 
-    and to display the result in different ways. For that, the first step is to create a polygon of the AoI (Area of Interest) on <a href="{{ url_for('map.show') }}">the map</a>. Just click
-    the points that make a polygon surrounding the intended AoI. When the first point is clicked again, the polygon is closed.
-    To start over, click &quot;Clear map&quot;.
+    Before using CityZones you must register for an account. Just go to the <a href="{{ url_for('auth.signup') }}">Sign up page</a>,
+    fill in the form with you data and submit it. You will be redirected to the Login page. Just enter your registered e-mail and
+    password to have access to the platform.
   </p>
 
   <p>
-    For an existing GeoJSON file containing the FeatureCollection with the polygon for the intended AoI, that file can be uploaded just clicking on the &quot;Send GeoJSON&quot; option. 
-    The application will reload the page with the marked AoI.
+    This web application is intended to provide an easy interface to submit map processing tasks to the RiskZones algorithms module (version 2.0), 
+    and to display the result in different ways. For that, the first step is to create a polygon of the AoI (Area of Interest) on
+    <a href="{{ url_for('map.show') }}">the map</a>. Just click the points that make a polygon surrounding the intended AoI. When the first point is
+    clicked again, the polygon is closed. To start over, click &quot;Clear map&quot;.
+  </p>
+
+  <p>
+    For an existing GeoJSON file containing the FeatureCollection with the polygon for the intended AoI, that file can be uploaded just clicking on the
+    &quot;Send GeoJSON&quot; option. The application will reload the page with the marked AoI.
   </p>
 
   <p>
@@ -27,25 +33,26 @@
   </p>
 
   <p>
-    Finally, there is the &quot;Request map&quot; option. The web interface will save the request in the proper database so a Maps-services device can get it (through its Worker module) and perform the risks classification. The page will reload and show a message on top indicating
-    that the request has been successfully submited with an identification number. Keep it!
+    Finally, there is the &quot;Submit task&quot; option. The web interface will save the task in the proper database so a Maps-services worker can
+    get it (through its Worker module) and perform the risks classification. The page will reload and show a message on top indicating that the task
+    has been successfully submitted with an identification number. Keep it!
   </p>
 
   <h2>Viewing the results</h2>
 
   <p>
-    On the <a href="{{ url_for('map.results') }}">results page</a> there is a list of all tasks that were requested.
-    Any request will be on this list, each onde identified by a proper ID number.
+    On the <a href="{{ url_for('map.results') }}">Tasks page</a> there is a list of all tasks that you submitted.
+    Any task will be on this list, each onde identified by a proper ID number.
   </p>
 
   <p>
-    The list shows also the timestamp of the task (i.e, when it was created). After the request, the task will be
+    The list shows also the timestamp of the task (i.e, when it was created). After the submission, the task will be
     in the &quot;<span class="status_queue">Queued</span>&quot; stage. This mean that the task is in our database
     waiting for a Maps-service device to get it.
   </p>
 
   <p>
-    When a Maps-service device requests a task, the web application will send the first task <span class="status_queue">on queue</span>.
+    When a Maps-service worker requests a task, the web application will send the first task <span class="status_queue">on queue</span>.
     The task then gets into the &quot;<span class="status_processing">Processing</span>&quot; stage.
   </p>
 

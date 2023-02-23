@@ -31,7 +31,7 @@
 
         <div class="mapform_inner">
           <button type="button" onclick="clearlastmarker();">Clear last marker</button>
-          <button type="button" class="button_red" onclick="clearmap();">Clear map</button>
+          <button type="button" class="button_alert" onclick="clearmap();">Clear map</button>
           <select id="select_country" onchange="changeCountry();">
             <option>-- Find country --</option>
           </select>
@@ -135,7 +135,7 @@
             </div>
           </div>
 
-          <p style="text-align: center;"><strong>Request description</strong></p>
+          <p style="text-align: center;"><strong>Task description</strong></p>
           
           <div class="mapform_inner_horizontal" style="justify-content: center;">
             <textarea id="description" name="description" size="30x5" required></textarea>
@@ -143,7 +143,7 @@
         </div>
 
         <div class="mapform_inner">
-          <button type="submit">Request map</button>
+          <button class="button_default" type="submit">Submit task</button>
         </div>
       </form>
     </div>

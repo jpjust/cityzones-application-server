@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block htmlhead %}
+{% endblock %}
+
+{% block header %}
+  {% block title %}Workers{% endblock %}
+{% endblock %}
+
+{% block content %}
+  <div class="center_area">
+    <div class="listing_area">
+      <h2>Workers list</h2>
+
+      <div>
+        <a href="{{ url_for('worker.add') }}"><button><i class="fa-solid fa-circle-plus"></i> Add worker</button></a>
+      </div>
+
+      <table width="100%">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Created at</th>
+            <th>Tasks</th>
+            <th>Total Time</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for worker in workers %}
+            <tr>
+              <td>{{ worker.id }}</td>
+              <td>{{ worker.name }}</td>
+              <td>{{ worker.description }}</td>
+              <td>{{ worker.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+              <td>{{ worker.tasks }}</td>
+              <td>{{ worker.total_time }}</td>
+              <td style="text-align: center; white-space: nowrap;">
+                <span class="fa-icon" style="display: flex; justify-content: space-around;">
+                  <a href="#" onclick="copyKey('{{ worker.token }}');"><i class="fa-solid fa-key"></i></a>
+                  <a href="{{ url_for('worker.edit', id=worker.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                  <a href="#" onclick="deleteWorker({{ worker.id }}, '{{ worker.name }}');"><i class="fa-solid fa-trash"></i></a>
+                </span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Copy the key to the clipboard.
+     */
+    function copyKey(key) {
+      navigator.clipboard.writeText(key);
+      alert('Copied the worker key: ' + key);
+    }
+
+    /**
+     * Asks the user if we should really delete a worker.
+     */
+    function deleteWorker(id, name) {
+      const confirmation = confirm('Are you sure you really want to delete "' + name + '"?\n\nThis operation is irreversible!');
+
+      if (confirmation == true) {
+        window.open('/worker/delete/' + id);
+      }
+    }
+  </script>
+{% endblock %}
+
