@@ -1,4 +1,4 @@
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 from sqlalchemy.orm import relationship
@@ -12,6 +12,30 @@ db = SQLAlchemy()
 class PasswordsDontMatchException(Exception):
     pass
 
+class User(UserMixin, db.Model):
+    '''
+    Model for users table.
+    '''
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True, nullable=False)    
+    password = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    company = db.Column(db.String(100), nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
+
+    tasks = relationship("Task", backref='users')
+
+    def __init__(self, email, password, password_confirmation, name, company=None):
+        if password != password_confirmation:
+            raise PasswordsDontMatchException
+        
+        self.email = email
+        self.password = sha256_crypt.encrypt(password)
+        self.name = name
+        self.company = company
+
 class Task(db.Model):
     '''
     Model for tasks table.
@@ -19,6 +43,7 @@ class Task(db.Model):
     __tablename__ = 'tasks'
 
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, sqlalchemy.ForeignKey(User.id), default=1, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), nullable=False)
     base_filename = db.Column(db.String(length=64), unique=True, nullable=False)
     config = db.Column(db.JSON, nullable=False)
@@ -38,6 +63,7 @@ class Task(db.Model):
         self.lat = lat
         self.lon = lon
         self.created_at = datetime.now()
+        self.user_id = current_user.id
     
     def expired(self):
         if self.requested_at == None:
@@ -106,25 +132,3 @@ class Worker(db.Model):
         self.name = name
         self.description = description
         self.token = secrets.token_hex(32)
-
-class User(UserMixin, db.Model):
-    '''
-    Model for users table.
-    '''
-    __tablename__ = 'users'
-
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100), unique=True, nullable=False)    
-    password = db.Column(db.String(100), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
-    company = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
-
-    def __init__(self, email, password, password_confirmation, name, company=None):
-        if password != password_confirmation:
-            raise PasswordsDontMatchException
-        
-        self.email = email
-        self.password = sha256_crypt.encrypt(password)
-        self.name = name
-        self.company = company
