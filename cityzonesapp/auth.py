@@ -8,10 +8,16 @@ db = models.db
 
 @bp.route('/login', methods=['GET'])
 def login():
+    '''
+    Login page.
+    '''
     return render_template('auth/login.html')
 
 @bp.route('/login', methods=['POST'])
 def login_post():
+    '''
+    Login post action.
+    '''
     user = models.User.query.filter_by(email=request.form.get('email')).first()
     if not user or not sha256_crypt.verify(request.form.get('password'), user.password):
         return render_template('auth/login.html', error_msg='Authentication failure.')
@@ -21,10 +27,16 @@ def login_post():
 
 @bp.route('/signup', methods=['GET'])
 def signup():
+    '''
+    Sign up page.
+    '''
     return render_template('auth/signup.html', form={})
 
 @bp.route('/signup', methods=['POST'])
 def signup_post():
+    '''
+    Sign up post action.
+    '''
     email     = request.form.get('email')
     name      = request.form.get('name')
     company   = request.form.get('company')
@@ -47,15 +59,24 @@ def signup_post():
 
 @bp.route('/logout', methods=['GET'])
 def logout():
+    '''
+    Log out action.
+    '''
     logout_user()
     return login()
 
 @bp.route('/profile', methods=['GET'])
 def profile():
+    '''
+    Profile view.
+    '''
     return render_template('auth/profile.html', user=current_user)
 
 @bp.route('/profile', methods=['POST'])
 def profile_post():
+    '''
+    Profile post action.
+    '''
     current_user.name = request.form.get('name')
     current_user.company = request.form.get('company')
 
