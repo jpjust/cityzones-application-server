@@ -150,6 +150,27 @@ input {
   margin: 5px;
 }
 
+table {
+  border: 1px solid;
+  border-collapse: collapse;
+}
+
+tr, th, td {
+  border: 1px solid;
+}
+
+tr:hover {
+  background-color: lightblue;
+}
+
+th, td {
+  padding: 5px;
+}
+
+thead {
+  background-color: rgb(200, 255, 200);
+}
+
 .results_list {
   font-size: small;
   display: flex;
@@ -164,6 +185,14 @@ input {
 .results_table {
   overflow-y: scroll;
   height: calc(75vh);
+}
+
+.results_table table, tr, th, td {
+  border: none;
+}
+
+.results_table table {
+  border: none;
 }
 
 .result_item:hover {
@@ -196,25 +225,4 @@ input {
 
 .fa-icon a {
   color: darkslategray;
-}
-
-table {
-  border: 1px solid;
-  border-collapse: collapse;
-}
-
-tr, th, td {
-  border: 1px solid;
-}
-
-tr:hover {
-  background-color: lightblue;
-}
-
-th, td {
-  padding: 5px;
-}
-
-thead {
-  background-color: rgb(200, 255, 200);
 }
