@@ -24,7 +24,7 @@
             <a href="{{ url_for ('map.show') }}">Map</a>
             <a href="{{ url_for ('map.results') }}">Tasks</a>
 
-            {% if current_user.id == 1 %}
+            {% if current_user.admin == True %}
               <a href="{{ url_for ('worker.list') }}">Workers</a>
             {% endif %}
 

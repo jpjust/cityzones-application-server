@@ -53,10 +53,6 @@ def create_app(test_config=None):
         # since the user_id is just the primary key of our user table, use it in the query for the user
         return models.User.query.get(int(user_id))
 
-    # Create database tables
-    with app.app_context():
-        models.db.create_all()
-
     # Create results directories
     try:
         os.makedirs(str(os.getenv('RESULTS_DIR')))

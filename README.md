@@ -24,4 +24,12 @@ Copy `.env.example` file and set the configuration for your server.
 
 `cp .env.example .env`
 
+Run migration scripts to create database tables and populate them with default values.
+
+`flask --app cityzonesapp db upgrade`
+
 To run CityZones Web you will need Passenger WSGI enabled in your server. Follow your HTTP daemon instructions to setup Passenger and finish the deployment.
+
+## Admin account
+
+CityZones has an admin account. Email: `admin`, password: `admin`. Use this account to register workers and get their API keys.

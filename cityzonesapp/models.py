@@ -19,10 +19,11 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
+    admin = db.Column(db.Boolean, nullable=False, default=False)
     email = db.Column(db.String(100), unique=True, nullable=False)    
     password = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    company = db.Column(db.String(100), nullable=False)
+    company = db.Column(db.String(100), nullable=True)
     created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
 
     tasks = relationship("Task", backref='users')
@@ -50,11 +51,11 @@ class Task(db.Model):
     geojson = db.Column(db.JSON, nullable=False)
     lat = db.Column(db.Float, nullable=False)
     lon = db.Column(db.Float, nullable=False)
-    requested_at = db.Column(db.DateTime(timezone=True), nullable=True)
+    requested_at = db.Column(db.DateTime(timezone=True))
     description = db.Column(db.String(100))
     requests = db.Column(db.Integer(), nullable=False, default=0)
 
-    result = relationship("Result", back_populates="task")
+    result = relationship("Result", backref="task")
 
     def __init__(self, base_filename, config, geojson, lat, lon):
         self.base_filename = base_filename
@@ -101,7 +102,7 @@ class Result(db.Model):
     task_id = db.Column(db.Integer, sqlalchemy.ForeignKey(Task.id))
     res_data = db.Column(db.JSON)
 
-    task = relationship("Task", back_populates="result")
+    #task = relationship("Task", back_populates="result")
 
     def __init__(self, task_id):
         self.created_at = datetime.now()
@@ -123,10 +124,10 @@ class Worker(db.Model):
     token = db.Column(db.String(64), unique=True, nullable=False)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Unicode(200))
-    created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
-    tasks = db.Column(db.Integer, server_default='0')
+    created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp(), nullable=False)
+    tasks = db.Column(db.Integer, default=0, nullable=False)
     last_task_at = db.Column(db.DateTime)
-    total_time = db.Column(db.Float, server_default='0.0')
+    total_time = db.Column(db.Float, default=0.0, nullable=False)
 
     def __init__(self, name, description):
         self.name = name

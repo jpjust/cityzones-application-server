@@ -7,7 +7,7 @@ db = models.db
 
 @bp.before_request
 def authorize():
-    if current_user.id != 1:
+    if current_user.admin == False:
         return redirect('/')
 
 @bp.route('/list', methods=['GET'])
