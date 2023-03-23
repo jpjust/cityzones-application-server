@@ -74,6 +74,7 @@ def run():
         edu_alg      = request.form['edu_alg']
         description  = request.form['description']
 
+        pois_use_all = ('pois_use_all' in request.form.keys())
         poi_hospital = ('poi_hospital' in request.form.keys())
         poi_firedept = ('poi_firedept' in request.form.keys())
         poi_police   = ('poi_police'   in request.form.keys())
@@ -101,6 +102,7 @@ def run():
         center_lon = (conf['left'] + conf['right']) /2
         center_lat = (conf['bottom'] + conf['top']) /2
 
+        conf['pois_use_all'] = pois_use_all
         if poi_hospital: conf['pois_types']['amenity']['hospital'] = {'w': w_hospital}
         if poi_firedept: conf['pois_types']['amenity']['fire_station'] = {'w': w_firedept}
         if poi_police:   conf['pois_types']['amenity']['police'] = {'w': w_police}

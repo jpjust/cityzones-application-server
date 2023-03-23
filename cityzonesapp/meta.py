@@ -55,6 +55,14 @@ def make_config_file(polygon: list, zl: int, edus: int, edu_alg: str) -> tuple:
         if point[1] < bottom: bottom = point[1]
         if point[1] > top:    top    = point[1]
     
+    # Increase grid box by 10% each side (to get PoIs outside)
+    width = abs(right - left)
+    height = abs(top - bottom)
+    left -= width * 0.1
+    right += width * 0.1
+    top += height * 0.1
+    bottom -= height * 0.1
+    
     base_conf = {
         "base_filename": base_filename,
         "left": left,
@@ -67,6 +75,7 @@ def make_config_file(polygon: list, zl: int, edus: int, edu_alg: str) -> tuple:
         "edus": edus,
         "geojson": f"{base_filename}.geojson",
         "pois": f"{base_filename}.osm",
+        "pois_use_all": False,
         "pois_types": {
             "amenity": {},
             "railway": {}
