@@ -127,6 +127,10 @@
         <span id="opacity_label">Classification layer opacity:</span>
         <input type="range" min="1" max="100" value="50" class="slider" id="opacity_range">
         <span id="opacity_value">50 %</span>
+
+        <span id="edus_radius_label">EDUs points radius:</span>
+        <input type="range" min="1" max="100" value="10" class="slider" id="edus_radius_range">
+        <span id="edus_radius_value">10</span>
       </div>
 
       <div>
@@ -143,8 +147,11 @@
     }).addTo(map);
     let marker = null;
     let opacity = 0.5;
+    let edus_radius = 10;
     let slider = document.getElementById('opacity_range');
     let slider_value = document.getElementById('opacity_value');
+    let slider_edus = document.getElementById('edus_radius_range');
+    let slider_edus_value = document.getElementById('edus_radius_value');
     const circles = [];
     const edus = [];
 
@@ -160,6 +167,21 @@
 
     slider.onchange = function() {
       circles.forEach((value, index, array) => value.setStyle({fillOpacity: opacity}));
+    }
+
+    /**
+     * EDUs radius slider events.
+     *
+     * Change EDUs radius value and updates map layer on mouse out.
+     */
+    slider_edus.oninput = function() {
+      edus_radius = slider_edus.value;
+      slider_edus_value.innerHTML = slider_edus.value;
+    }
+
+    slider_edus.onchange = function() {
+      console.log('new radius = ' + edus_radius);
+      edus.forEach((value, index, array) => value.setRadius(edus_radius));
     }
 
     // Marker functions
@@ -219,7 +241,7 @@
 
           // Add EDUs
           json['edus'].forEach((value, index, array) => {
-            let edu = L.circle([value[1], value[0]], {radius: 10, color: '#000000', stroke: false, fillOpacity: 1}).addTo(map);
+            let edu = L.circle([value[1], value[0]], {radius: edus_radius, color: '#000000', stroke: false, fillOpacity: 1}).addTo(map);
             edus.push(edu);
           });
 
