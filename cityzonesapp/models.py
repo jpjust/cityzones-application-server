@@ -2,6 +2,7 @@ from flask_login import UserMixin, current_user
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 from sqlalchemy.orm import relationship
+from geoalchemy2 import Geometry
 from datetime import datetime, timedelta
 from passlib.hash import sha256_crypt
 import os
@@ -133,3 +134,33 @@ class Worker(db.Model):
         self.name = name
         self.description = description
         self.token = secrets.token_hex(32)
+
+class CellType(db.Model):
+    '''
+    Model for cells_types table.
+    '''
+    __tablename__ = 'cells_types'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+
+    def __init__(self, name):
+        self.name = name
+
+class Cell(db.Model):
+    '''
+    Model for cells table;
+    '''
+    __tablename__ = 'cells'
+
+    id = db.Column(db.Integer, primary_key=True)
+    coord = db.Column(Geometry('POINT'), nullable=False)
+    radius = db.Column(db.Integer, nullable=False)
+    cell_type_id = db.Column(db.Integer, sqlalchemy.ForeignKey(CellType.id))
+
+    cell_type = relationship("CellType", backref="task")
+
+    def __init__(self, lat, lon, radius):
+        self.coord = Geometry(f'POINT("{lon} {lat}")')
+        self.radius = radius
+        self.cell_type_id = 1

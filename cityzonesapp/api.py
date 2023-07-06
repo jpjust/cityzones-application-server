@@ -1,5 +1,6 @@
 from flask import Blueprint, Response, current_app, g, request
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, func
+from shapely import wkb, wkt
 from datetime import datetime, timedelta
 from . import models
 import os
@@ -123,3 +124,23 @@ def post_result(id):
         return Response(json.dumps({'msg': 'Received data is incomplete.'}), headers={'Content-type': 'application/json'}, status=400)
     except ValueError:
         return Response(json.dumps({'msg': 'Received header is incomplete.'}), headers={'Content-type': 'application/json'}, status=400)
+
+@bp.route('/cells/<float:left>/<float:top>/<float:right>/<float:bottom>', methods=['GET'])
+def get_cells(left, top, right, bottom):
+    '''
+    Return a list of cells towers.
+    '''
+    polygon = f'POLYGON(({left} {bottom}, {left} {top}, {right} {top}, {right} {bottom}, {left} {bottom}))'
+    cells = models.Cell.query.filter(func.MBRContains(func.ST_GeomFromText(polygon), models.Cell.coord))
+    result = []
+
+    for cell in cells:
+        point = wkb.loads(cell.coord.data)
+        result.append({
+            'id': cell.id,
+            'lat': point.y,
+            'lon': point.x,
+            'range': cell.radius
+        })
+
+    return Response(json.dumps(result), headers={'Content-type': 'application/json'}, status=200)
