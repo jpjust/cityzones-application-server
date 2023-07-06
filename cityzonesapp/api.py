@@ -125,12 +125,12 @@ def post_result(id):
     except ValueError:
         return Response(json.dumps({'msg': 'Received header is incomplete.'}), headers={'Content-type': 'application/json'}, status=400)
 
-@bp.route('/cells/<float:left>/<float:top>/<float:right>/<float:bottom>', methods=['GET'])
+@bp.route('/cells/<left>/<top>/<right>/<bottom>', methods=['GET'])
 def get_cells(left, top, right, bottom):
     '''
     Return a list of cells towers.
     '''
-    polygon = f'POLYGON(({left} {bottom}, {left} {top}, {right} {top}, {right} {bottom}, {left} {bottom}))'
+    polygon = f'POLYGON(({float(left)} {float(bottom)}, {float(left)} {float(top)}, {float(right)} {float(top)}, {float(right)} {float(bottom)}, {float(left)} {float(bottom)}))'
     cells = models.Cell.query.filter(func.MBRContains(func.ST_GeomFromText(polygon), models.Cell.coord))
     result = []
 
