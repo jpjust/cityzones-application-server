@@ -138,6 +138,7 @@ def get_cells(left, top, right, bottom):
         point = wkb.loads(cell.coord.data)
         result.append({
             'id': cell.id,
+            'type': cell.cell_type_id,
             'lat': point.y,
             'lon': point.x,
             'range': cell.radius
